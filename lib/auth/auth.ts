@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "@/drizzle/db";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import { prisma } from "@/lib/prisma/db";
 import { nextCookies } from "better-auth/next-js";
 import { sendPasswordResetEmail } from "../emails/password-reset-email";
 import { sendEmailVerificationEmail } from "../emails/email-verification";
@@ -13,8 +13,6 @@ import { admin as adminPlugin } from "better-auth/plugins/admin";
 import { organization } from "better-auth/plugins/organization";
 import { ac, admin, user } from "@/components/auth/permissions";
 import { sendOrganizationInviteEmail } from "../emails/organization-invite-email";
-import { desc, eq } from "drizzle-orm";
-import { member } from "@/drizzle/schema";
 
 /**
  * Better Auth server configured with email, OAuth, passkey, and organization features.
@@ -118,8 +116,8 @@ export const auth = betterAuth({
       },
     }),
   ],
-  database: drizzleAdapter(db, {
-    provider: "pg",
+  database: prismaAdapter(prisma, {
+    provider: "postgresql",
   }),
   hooks: {
     after: createAuthMiddleware(async (ctx) => {
@@ -139,10 +137,10 @@ export const auth = betterAuth({
     session: {
       create: {
         before: async (userSession) => {
-          const membership = await db.query.member.findFirst({
-            where: eq(member.userId, userSession.userId),
-            orderBy: desc(member.createdAt),
-            columns: { organizationId: true },
+          const membership = await prisma.member.findFirst({
+            where: { userId: userSession.userId },
+            orderBy: { createdAt: "desc" },
+            select: { organizationId: true },
           });
 
           return {
