@@ -1,5 +1,9 @@
 "use client";
 
+import type { UserWithRole } from "better-auth/plugins/admin";
+import { MoreHorizontal } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,10 +28,6 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { authClient } from "@/lib/auth/auth-client";
 import { GLOBAL_ROLES } from "@/lib/auth/roles";
 import { ROUTES } from "@/lib/routes";
-import { UserWithRole } from "better-auth/plugins/admin";
-import { MoreHorizontal } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 /**
  * Row renderer for the admin users table with impersonation and moderation actions.
@@ -62,7 +62,7 @@ export function UserRow({
           refetch();
           router.push(ROUTES.HOME);
         },
-      }
+      },
     );
   }
 
@@ -81,7 +81,7 @@ export function UserRow({
           toast.success("User banned");
           router.refresh();
         },
-      }
+      },
     );
   }
 
@@ -100,7 +100,7 @@ export function UserRow({
           toast.success("User unbanned");
           router.refresh();
         },
-      }
+      },
     );
   }
 
@@ -118,7 +118,7 @@ export function UserRow({
         onSuccess: () => {
           toast.success("User sessions revoked");
         },
-      }
+      },
     );
   }
 
@@ -137,7 +137,7 @@ export function UserRow({
           toast.success("User deleted");
           router.refresh();
         },
-      }
+      },
     );
   }
 
@@ -146,8 +146,8 @@ export function UserRow({
       <TableCell>
         <div>
           <div className="font-medium">{user.name || "No name"}</div>
-          <div className="text-sm text-muted-foreground">{user.email}</div>
-          <div className="flex items-center gap-2 not-empty:mt-2">
+          <div className="text-muted-foreground text-sm">{user.email}</div>
+          <div className="not-empty:mt-2 flex items-center gap-2">
             {user.banned && <Badge variant="destructive">Banned</Badge>}
             {!user.emailVerified && <Badge variant="outline">Unverified</Badge>}
             {isSelf && <Badge>You</Badge>}

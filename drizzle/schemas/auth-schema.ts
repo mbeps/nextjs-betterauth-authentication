@@ -1,9 +1,9 @@
 import {
+  boolean,
+  integer,
   pgTable,
   text,
   timestamp,
-  boolean,
-  integer,
 } from "drizzle-orm/pg-core";
 import { INVITATION_STATUS, ORG_ROLES } from "@/lib/auth/roles";
 

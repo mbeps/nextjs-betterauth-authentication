@@ -1,9 +1,9 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { BetterAuthActionButton } from "@/components/auth/buttons/better-auth-action-button";
 import { authClient } from "@/lib/auth/auth-client";
 import { ROUTES } from "@/lib/routes";
-import { useEffect, useRef, useState } from "react";
 
 /**
  * Guides users through resending their email verification link with a cooldown.
@@ -35,14 +35,14 @@ export function EmailVerification({ email }: { email: string }) {
     }, 1000);
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Initial countdown setup on mount is intentional
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- Initial countdown setup is intentional
     startEmailVerificationCountdown();
   }, []);
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-muted-foreground mt-2">
+      <p className="mt-2 text-muted-foreground text-sm">
         We sent you a verification link. Please check your email and click the
         link to verify your account.
       </p>

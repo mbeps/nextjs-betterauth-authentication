@@ -1,7 +1,6 @@
-import { auth } from "@/lib/auth/auth";
-import { ROUTES } from "@/lib/routes";
-import { redirect } from "next/navigation";
+import type { organization } from "better-auth/plugins/organization";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -9,7 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { organization } from "better-auth/plugins/organization";
+import { auth } from "@/lib/auth/auth";
+import { ROUTES } from "@/lib/routes";
 import { InviteInformation } from "./_components/invite-information";
 
 /**

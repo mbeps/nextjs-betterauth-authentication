@@ -1,7 +1,10 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,16 +14,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { LoadingSwap } from "@/components/ui/loading-swap";
+import { NumberInput } from "@/components/ui/number-input";
 import { authClient } from "@/lib/auth/auth-client";
 import { ROUTES } from "@/lib/routes";
-import { toast } from "sonner";
-import { NumberInput } from "@/components/ui/number-input";
-import { useRouter } from "next/navigation";
 import {
+  type ProfileUpdateFormData,
   profileUpdateSchema,
-  ProfileUpdateFormData,
 } from "@/schemas/profile-update";
 
 type UpdateUserPayload = Parameters<typeof authClient.updateUser>[0];

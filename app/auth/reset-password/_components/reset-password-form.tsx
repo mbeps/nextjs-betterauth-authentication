@@ -1,7 +1,18 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -10,24 +21,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { LoadingSwap } from "@/components/ui/loading-swap";
+import { PasswordInput } from "@/components/ui/password-input";
 import { authClient } from "@/lib/auth/auth-client";
 import { ROUTES } from "@/lib/routes";
-import { toast } from "sonner";
-import { PasswordInput } from "@/components/ui/password-input";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import {
+  type ResetPasswordForm,
   resetPasswordSchema,
-  ResetPasswordForm,
 } from "@/schemas/reset-password";
 
 export default function ResetPasswordClient() {
@@ -65,14 +65,14 @@ export default function ResetPasswordClient() {
             router.push(ROUTES.AUTH.LOGIN);
           }, 1000);
         },
-      }
+      },
     );
   }
 
   if (token == null || error != null) {
     return (
       <div className="my-6 px-4">
-        <Card className="w-full max-w-md mx-auto">
+        <Card className="mx-auto w-full max-w-md">
           <CardHeader>
             <CardTitle>Invalid Reset Link</CardTitle>
             <CardDescription>
@@ -91,7 +91,7 @@ export default function ResetPasswordClient() {
 
   return (
     <div className="my-6 px-4">
-      <Card className="w-full max-w-md mx-auto">
+      <Card className="mx-auto w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl">Reset Your Password</CardTitle>
         </CardHeader>

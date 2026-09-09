@@ -1,7 +1,10 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,15 +14,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { PasswordInput } from "@/components/ui/password-input";
-import { Button } from "@/components/ui/button";
 import { LoadingSwap } from "@/components/ui/loading-swap";
+import { PasswordInput } from "@/components/ui/password-input";
 import { authClient } from "@/lib/auth/auth-client";
 import { ROUTES } from "@/lib/routes";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { type SignInForm, signInSchema } from "@/schemas/sign-in";
 import { PasskeyButton } from "../buttons/passkey-button";
-import { signInSchema, SignInForm } from "@/schemas/sign-in";
 
 /**
  * Email and password sign-in form with passkey shortcut and password reset link.
@@ -62,7 +62,7 @@ export function SignInTab({
         onSuccess: () => {
           router.push(ROUTES.HOME);
         },
-      }
+      },
     );
   }
 
@@ -93,14 +93,14 @@ export function SignInTab({
             name="password"
             render={({ field }) => (
               <FormItem>
-                <div className="flex justify-between items-center">
+                <div className="flex items-center justify-between">
                   <FormLabel>Password</FormLabel>
                   <Button
                     onClick={openForgotPassword}
                     type="button"
                     variant="link"
                     size="sm"
-                    className="text-sm font-normal underline"
+                    className="font-normal text-sm underline"
                   >
                     Forgot password?
                   </Button>

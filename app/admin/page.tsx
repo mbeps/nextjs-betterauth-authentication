@@ -1,3 +1,8 @@
+import type { admin, UserWithRole } from "better-auth/plugins/admin";
+import { ArrowLeft, Users } from "lucide-react";
+import { headers } from "next/headers";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -14,11 +19,6 @@ import {
 } from "@/components/ui/table";
 import { auth } from "@/lib/auth/auth";
 import { ROUTES } from "@/lib/routes";
-import { admin, UserWithRole } from "better-auth/plugins/admin";
-import { ArrowLeft, Users } from "lucide-react";
-import { headers } from "next/headers";
-import Link from "next/link";
-import { redirect } from "next/navigation";
 import { UserRow } from "./_components/user-row";
 
 /**
@@ -44,9 +44,9 @@ export default async function AdminPage() {
   });
 
   return (
-    <div className="mx-auto container my-6 px-4">
-      <Link href={ROUTES.HOME} className="inline-flex items-center mb-6">
-        <ArrowLeft className="size-4 mr-2" />
+    <div className="container mx-auto my-6 px-4">
+      <Link href={ROUTES.HOME} className="mb-6 inline-flex items-center">
+        <ArrowLeft className="mr-2 size-4" />
         Back to Home
       </Link>
 

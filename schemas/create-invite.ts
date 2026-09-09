@@ -1,5 +1,5 @@
-import { ORG_ROLES } from "@/lib/auth/roles";
 import z from "zod";
+import { ORG_ROLES } from "@/lib/auth/roles";
 
 export const createInviteSchema = z.object({
   email: z.email().min(1).trim(),

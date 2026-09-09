@@ -1,4 +1,4 @@
-import { sendEmail } from "./send-email"
+import { sendEmail } from "./send-email";
 
 /**
  * Delivers the password reset link produced by Better Auth.
@@ -10,8 +10,8 @@ export function sendPasswordResetEmail({
   user,
   url,
 }: {
-  user: { email: string; name: string }
-  url: string
+  user: { email: string; name: string };
+  url: string;
 }) {
   return sendEmail({
     to: user.email,
@@ -28,5 +28,5 @@ export function sendPasswordResetEmail({
       </div>
     `,
     text: `Hello ${user.name},\n\nYou requested to reset your password. Click this link to reset it: ${url}\n\nIf you didn't request this, please ignore this email.\n\nThis link will expire in 24 hours.\n\nBest regards,\nYour App Team`,
-  })
+  });
 }

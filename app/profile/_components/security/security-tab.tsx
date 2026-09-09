@@ -1,3 +1,5 @@
+import type { passkey } from "@better-auth/passkey";
+import { headers } from "next/headers";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -7,12 +9,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { auth } from "@/lib/auth/auth";
-import { headers } from "next/headers";
-import { SetPasswordButton } from "./set-password-button";
 import { ChangePasswordForm } from "./change-password-form";
-import { TwoFactorAuth } from "./two-factor-auth";
 import { PasskeyManagement } from "./passkey-management";
-import { passkey } from "@better-auth/passkey";
+import { SetPasswordButton } from "./set-password-button";
+import { TwoFactorAuth } from "./two-factor-auth";
 
 type Account = Awaited<ReturnType<typeof auth.api.listUserAccounts>>[number];
 

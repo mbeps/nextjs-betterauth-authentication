@@ -1,11 +1,11 @@
 "use client";
 
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { BetterAuthActionButton } from "@/components/auth/buttons/better-auth-action-button";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth/auth-client";
 import { ROUTES } from "@/lib/routes";
-import Link from "next/link";
-import { useEffect, useState } from "react";
 
 /**
  * Landing page that surfaces navigation options based on session state.
@@ -29,19 +29,19 @@ export default function Home() {
   }
 
   return (
-    <div className="my-6 px-4 max-w-md mx-auto">
-      <div className="text-center space-y-6">
+    <div className="mx-auto my-6 max-w-md px-4">
+      <div className="space-y-6 text-center">
         {session == null ? (
           <>
-            <h1 className="text-3xl font-bold">Welcome to Our App</h1>
+            <h1 className="font-bold text-3xl">Welcome to Our App</h1>
             <Button asChild size="lg">
               <Link href={ROUTES.AUTH.LOGIN}>Sign In / Sign Up</Link>
             </Button>
           </>
         ) : (
           <>
-            <h1 className="text-3xl font-bold">Welcome {session.user.name}!</h1>
-            <div className="flex gap-4 justify-center">
+            <h1 className="font-bold text-3xl">Welcome {session.user.name}!</h1>
+            <div className="flex justify-center gap-4">
               <Button asChild size="lg">
                 <Link href={ROUTES.PROFILE}>Profile</Link>
               </Button>

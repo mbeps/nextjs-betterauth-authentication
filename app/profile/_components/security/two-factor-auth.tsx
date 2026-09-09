@@ -1,7 +1,12 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import QRCode from "react-qr-code";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -10,21 +15,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { authClient } from "@/lib/auth/auth-client";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { PasswordInput } from "@/components/ui/password-input";
-import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import QRCode from "react-qr-code";
+import { LoadingSwap } from "@/components/ui/loading-swap";
+import { PasswordInput } from "@/components/ui/password-input";
+import { authClient } from "@/lib/auth/auth-client";
 import {
-  twoFactorAuthSchema,
-  TwoFactorAuthForm,
+  type QrForm,
   qrSchema,
-  QrForm,
+  type TwoFactorAuthForm,
+  twoFactorAuthSchema,
 } from "@/schemas/two-factor-auth";
+
 type TwoFactorData = {
   totpURI: string;
   backupCodes: string[];
@@ -37,7 +38,7 @@ type TwoFactorData = {
  */
 export function TwoFactorAuth({ isEnabled }: { isEnabled: boolean }) {
   const [twoFactorData, setTwoFactorData] = useState<TwoFactorData | null>(
-    null
+    null,
   );
   const router = useRouter();
   const form = useForm<TwoFactorAuthForm>({
@@ -64,7 +65,7 @@ export function TwoFactorAuth({ isEnabled }: { isEnabled: boolean }) {
           form.reset();
           router.refresh();
         },
-      }
+      },
     );
   }
 
@@ -80,10 +81,8 @@ export function TwoFactorAuth({ isEnabled }: { isEnabled: boolean }) {
     if (result.error) {
       toast.error(result.error.message || "Failed to enable 2FA");
     }
-    {
-      setTwoFactorData(result.data);
-      form.reset();
-    }
+    setTwoFactorData(result.data);
+    form.reset();
   }
 
   if (twoFactorData != null) {
@@ -102,7 +101,7 @@ export function TwoFactorAuth({ isEnabled }: { isEnabled: boolean }) {
       <form
         className="space-y-4"
         onSubmit={form.handleSubmit(
-          isEnabled ? handleDisableTwoFactorAuth : handleEnableTwoFactorAuth
+          isEnabled ? handleDisableTwoFactorAuth : handleEnableTwoFactorAuth,
         )}
       >
         <FormField
@@ -172,18 +171,18 @@ function QRCodeVerify({
           setSuccessfullyEnabled(true);
           router.refresh();
         },
-      }
+      },
     );
   }
 
   if (successfullyEnabled) {
     return (
       <>
-        <p className="text-sm text-muted-foreground mb-2">
+        <p className="mb-2 text-muted-foreground text-sm">
           Save these backup codes in a safe place. You can use them to access
           your account.
         </p>
-        <div className="grid grid-cols-2 gap-2 mb-4">
+        <div className="mb-4 grid grid-cols-2 gap-2">
           {backupCodes.map((code, index) => (
             <div key={index} className="font-mono text-sm">
               {code}
@@ -225,14 +224,14 @@ function QRCodeVerify({
         </form>
       </Form>
       <div className="flex flex-col items-center space-y-4">
-        <div className="p-4 bg-white">
+        <div className="bg-white p-4">
           <QRCode size={256} value={totpURI} />
         </div>
         <div className="text-center">
-          <p className="text-sm text-muted-foreground mb-2">
+          <p className="mb-2 text-muted-foreground text-sm">
             Or enter this code manually:
           </p>
-          <code className="bg-muted px-2 py-1 rounded text-sm font-mono break-all">
+          <code className="break-all rounded bg-muted px-2 py-1 font-mono text-sm">
             {new URL(totpURI).searchParams.get("secret")}
           </code>
         </div>

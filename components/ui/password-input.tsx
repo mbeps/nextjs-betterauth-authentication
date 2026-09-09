@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { cn } from "@/lib/utils"
-import { EyeIcon, EyeOffIcon } from "lucide-react"
-import { useState, type ComponentProps } from "react"
+import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { type ComponentProps, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 /**
  * Password input with toggleable visibility while preserving styling.
@@ -16,8 +16,8 @@ export function PasswordInput({
   className,
   ...props
 }: Omit<ComponentProps<typeof Input>, "type">) {
-  const [showPassword, setShowPassword] = useState(false)
-  const Icon = showPassword ? EyeOffIcon : EyeIcon
+  const [showPassword, setShowPassword] = useState(false);
+  const Icon = showPassword ? EyeOffIcon : EyeIcon;
 
   return (
     <div className="relative">
@@ -32,7 +32,7 @@ export function PasswordInput({
         type="button"
         className="absolute inset-y-1/2 right-1 size-7 -translate-y-1/2"
         // Toggle between password and text visibility.
-        onClick={() => setShowPassword(p => !p)}
+        onClick={() => setShowPassword((p) => !p)}
       >
         <Icon className="size-5" />
         <span className="sr-only">
@@ -40,5 +40,5 @@ export function PasswordInput({
         </span>
       </Button>
     </div>
-  )
+  );
 }

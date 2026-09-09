@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { BetterAuthActionButton } from "@/components/auth/buttons/better-auth-action-button"
-import { authClient } from "@/lib/auth/auth-client"
+import { BetterAuthActionButton } from "@/components/auth/buttons/better-auth-action-button";
+import { authClient } from "@/lib/auth/auth-client";
 
 /**
  * Button that triggers the password reset flow for users without a password.
@@ -17,10 +17,10 @@ export function SetPasswordButton({ email }: { email: string }) {
         return authClient.requestPasswordReset({
           email,
           redirectTo: "/auth/reset-password",
-        })
+        });
       }}
     >
       Send Password Reset Email
     </BetterAuthActionButton>
-  )
+  );
 }

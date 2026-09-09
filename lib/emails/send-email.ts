@@ -1,6 +1,6 @@
-import { ServerClient } from "postmark"
+import { ServerClient } from "postmark";
 
-const postmarkClient = new ServerClient(process.env.POSTMARK_SERVER_TOKEN!)
+const postmarkClient = new ServerClient(process.env.POSTMARK_SERVER_TOKEN!);
 
 /**
  * Sends a transactional email through the configured Postmark client.
@@ -17,10 +17,10 @@ export function sendEmail({
   html,
   text,
 }: {
-  to: string
-  subject: string
-  html: string
-  text: string
+  to: string;
+  subject: string;
+  html: string;
+  text: string;
 }) {
   return postmarkClient.sendEmail({
     From: process.env.POSTMARK_FROM_EMAIL!,
@@ -28,5 +28,5 @@ export function sendEmail({
     Subject: subject,
     HtmlBody: html,
     TextBody: text,
-  })
+  });
 }

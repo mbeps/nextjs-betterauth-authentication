@@ -1,7 +1,9 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,14 +13,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { authClient } from "@/lib/auth/auth-client";
 import { ROUTES } from "@/lib/routes";
-import { toast } from "sonner";
 import {
+  type ForgotPasswordForm,
   forgotPasswordSchema,
-  ForgotPasswordForm,
 } from "@/schemas/forgot-password";
 
 /**
@@ -53,13 +53,13 @@ export function ForgotPassword({
       {
         onError: (error) => {
           toast.error(
-            error.error.message || "Failed to send password reset email"
+            error.error.message || "Failed to send password reset email",
           );
         },
         onSuccess: () => {
           toast.success("Password reset email sent");
         },
-      }
+      },
     );
   }
 

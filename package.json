@@ -11,7 +11,10 @@
     "db:studio": "drizzle-kit studio",
     "db:push": "drizzle-kit push",
     "auth:generate": "npx @better-auth/cli@latest generate --config ./lib/auth/auth.ts --output ./drizzle/schemas/new-auth-schema.ts --yes",
-    "lint": "eslint"
+    "lint": "biome check .",
+    "lint:fix": "biome check --write --unsafe .",
+    "format": "biome format --write .",
+    "ci": "biome ci ."
   },
   "dependencies": {
     "@better-auth/passkey": "^1.4.10",
@@ -44,14 +47,13 @@
     "zod": "^4.3.2"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.12",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/node": "^20.19.27",
     "@types/pg": "^8.16.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "drizzle-kit": "^0.31.8",
-    "eslint": "^9.39.2",
-    "eslint-config-next": "16.1.1",
     "tailwindcss": "^4.1.18",
     "tw-animate-css": "^1.3.8",
     "typescript": "^5"

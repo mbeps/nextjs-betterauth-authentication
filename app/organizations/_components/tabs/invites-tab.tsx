@@ -1,5 +1,7 @@
 "use client";
 
+import { BetterAuthActionButton } from "@/components/auth/buttons/better-auth-action-button";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -8,11 +10,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { authClient } from "@/lib/auth/auth-client";
-import { BetterAuthActionButton } from "@/components/auth/buttons/better-auth-action-button";
+import { INVITATION_STATUS } from "@/lib/auth/roles";
 import { CreateInviteButton } from "../buttons/create-invite-button";
-import { INVITATION_STATUS, ORG_ROLES } from "@/lib/auth/roles";
 
 /**
  * Shows pending invitations and allows cancellation or new invites.
@@ -21,7 +21,7 @@ import { INVITATION_STATUS, ORG_ROLES } from "@/lib/auth/roles";
 export function InvitesTab() {
   const { data: activeOrganization } = authClient.useActiveOrganization();
   const pendingInvites = activeOrganization?.invitations?.filter(
-    (invite) => invite.status === INVITATION_STATUS.PENDING
+    (invite) => invite.status === INVITATION_STATUS.PENDING,
   );
 
   /**
@@ -35,7 +35,7 @@ export function InvitesTab() {
 
   return (
     <div className="space-y-4">
-      <div className="justify-end flex">
+      <div className="flex justify-end">
         <CreateInviteButton />
       </div>
 

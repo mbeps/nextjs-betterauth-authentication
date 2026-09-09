@@ -1,4 +1,4 @@
-import type { NextConfig } from "next"
+import type { NextConfig } from "next";
 
 /**
  * Next.js configuration enabling remote images for common OAuth providers.
@@ -19,6 +19,6 @@ const nextConfig: NextConfig = {
     ],
   },
   /* config options here */
-}
+};
 
-export default nextConfig
+export default nextConfig;

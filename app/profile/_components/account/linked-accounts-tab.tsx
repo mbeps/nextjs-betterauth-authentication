@@ -1,6 +1,6 @@
+import { headers } from "next/headers";
 import { Card, CardContent } from "@/components/ui/card";
 import { auth } from "@/lib/auth/auth";
-import { headers } from "next/headers";
 import { AccountLinking } from "./account-linking";
 
 type Account = Awaited<ReturnType<typeof auth.api.listUserAccounts>>[number];

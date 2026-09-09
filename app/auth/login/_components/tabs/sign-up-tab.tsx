@@ -1,7 +1,9 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,14 +13,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { PasswordInput } from "@/components/ui/password-input";
-import { Button } from "@/components/ui/button";
 import { LoadingSwap } from "@/components/ui/loading-swap";
+import { NumberInput } from "@/components/ui/number-input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { authClient } from "@/lib/auth/auth-client";
 import { ROUTES } from "@/lib/routes";
-import { toast } from "sonner";
-import { NumberInput } from "@/components/ui/number-input";
-import { signUpSchema, SignUpForm } from "@/schemas/sign-up";
+import { type SignUpForm, signUpSchema } from "@/schemas/sign-up";
 
 /**
  * Sign-up form that captures user info and triggers Better Auth registration.
@@ -52,7 +52,7 @@ export function SignUpTab({
         onError: (error) => {
           toast.error(error.error.message || "Failed to sign up");
         },
-      }
+      },
     );
 
     if (res.error == null && !res.data.user.emailVerified) {
