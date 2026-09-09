@@ -18,6 +18,10 @@
       "!public",
       "!__tests__",
       "!tests",
+      "!**/*.test.*",
+      "!**/*.spec.*",
+      "!vitest.config.*",
+      "!vitest.setup.*",
       "!.vscode"
     ],
     "maxSize": 1048576,

@@ -1,6 +1,5 @@
-import assert from "node:assert/strict";
-import { describe, it } from "node:test";
-import { validateEnv } from "./env.ts";
+import { describe, expect, it } from "vitest";
+import { validateEnv } from "@/lib/env";
 
 const validServerEnv = {
   NODE_ENV: "test",
@@ -19,32 +18,27 @@ const validServerEnv = {
 describe("validateEnv", () => {
   it("validates valid server environment variables successfully", () => {
     const parsed = validateEnv(validServerEnv, true);
-    assert.equal(parsed.DATABASE_URL, validServerEnv.DATABASE_URL);
-    assert.equal(
-      parsed.POSTMARK_FROM_EMAIL,
-      validServerEnv.POSTMARK_FROM_EMAIL,
-    );
-    assert.equal(parsed.NODE_ENV, "test");
+    expect(parsed.DATABASE_URL).toBe(validServerEnv.DATABASE_URL);
+    expect(parsed.POSTMARK_FROM_EMAIL).toBe(validServerEnv.POSTMARK_FROM_EMAIL);
+    expect(parsed.NODE_ENV).toBe("test");
   });
 
   it("defaults NODE_ENV to development if not provided", () => {
     const { NODE_ENV: _, ...withoutNodeEnv } = validServerEnv;
     const parsed = validateEnv(withoutNodeEnv, true);
-    assert.equal(parsed.NODE_ENV, "development");
+    expect(parsed.NODE_ENV).toBe("development");
   });
 
   it("throws when a required server environment variable is missing", () => {
     const { DATABASE_URL: _, ...invalidEnv } = validServerEnv;
-    assert.throws(
-      () => validateEnv(invalidEnv, true),
+    expect(() => validateEnv(invalidEnv, true)).toThrow(
       /Invalid environment variables/,
     );
   });
 
   it("throws when BETTER_AUTH_URL is not a valid URL", () => {
     const invalidEnv = { ...validServerEnv, BETTER_AUTH_URL: "not-a-url" };
-    assert.throws(
-      () => validateEnv(invalidEnv, true),
+    expect(() => validateEnv(invalidEnv, true)).toThrow(
       /Invalid environment variables/,
     );
   });
@@ -54,24 +48,24 @@ describe("validateEnv", () => {
       ...validServerEnv,
       POSTMARK_FROM_EMAIL: "invalid-email",
     };
-    assert.throws(
-      () => validateEnv(invalidEnv, true),
+    expect(() => validateEnv(invalidEnv, true)).toThrow(
       /Invalid environment variables/,
     );
   });
 
   it("succeeds in client context without server secrets", () => {
     const clientEnv = validateEnv({}, false);
-    assert.ok(clientEnv);
+    expect(clientEnv).toBeDefined();
   });
 
   it("skips validation when SKIP_ENV_VALIDATION is true", () => {
     process.env.SKIP_ENV_VALIDATION = "true";
     try {
       const parsed = validateEnv({});
-      assert.ok(parsed);
+      expect(parsed).toBeDefined();
     } finally {
       delete process.env.SKIP_ENV_VALIDATION;
     }
   });
 });
+
