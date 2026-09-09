@@ -82,15 +82,15 @@ emailVerification: {
 ```ts
 socialProviders: {
   github: {
-    clientId: process.env.GITHUB_CLIENT_ID!,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+    clientId: env.CLIENT_ID_GITHUB,
+    clientSecret: env.CLIENT_SECRET_GITHUB,
     mapProfileToUser: (profile) => ({
       favoriteNumber: Number(profile.public_repos) || 0,
     }),
   },
   discord: {
-    clientId: process.env.DISCORD_CLIENT_ID!,
-    clientSecret: process.env.DISCORD_CLIENT_SECRET!,
+    clientId: env.CLIENT_ID_DISCORD,
+    clientSecret: env.CLIENT_SECRET_DISCORD,
     mapProfileToUser: () => ({ favoriteNumber: 0 }),
   },
 },
@@ -1040,10 +1040,10 @@ There is **no** `middleware.ts` in this codebase. Route protection is handled pa
 | `DATABASE_URL`          | Yes                     | PostgreSQL connection string for Drizzle + Better Auth                                                   |
 | `BETTER_AUTH_SECRET`    | Yes                     | Signing key for JWT sessions and tokens                                                                  |
 | `BETTER_AUTH_URL`       | Yes                     | App base URL (used in org invite links: `process.env.BETTER_AUTH_URL + ROUTES.ORGANIZATIONS.INVITE(id)`) |
-| `GITHUB_CLIENT_ID`      | Yes (for GitHub OAuth)  | GitHub OAuth App client ID                                                                               |
-| `GITHUB_CLIENT_SECRET`  | Yes (for GitHub OAuth)  | GitHub OAuth App client secret                                                                           |
-| `DISCORD_CLIENT_ID`     | Yes (for Discord OAuth) | Discord Application client ID                                                                            |
-| `DISCORD_CLIENT_SECRET` | Yes (for Discord OAuth) | Discord Application client secret                                                                        |
+| `CLIENT_ID_GITHUB`      | Yes (for GitHub OAuth)  | GitHub OAuth App client ID                                                                               |
+| `CLIENT_SECRET_GITHUB`  | Yes (for GitHub OAuth)  | GitHub OAuth App client secret                                                                           |
+| `CLIENT_ID_DISCORD`     | Yes (for Discord OAuth) | Discord Application client ID                                                                            |
+| `CLIENT_SECRET_DISCORD` | Yes (for Discord OAuth) | Discord Application client secret                                                                        |
 | `POSTMARK_SERVER_TOKEN` | Yes (for emails)        | Postmark server API token                                                                                |
 | `POSTMARK_FROM_EMAIL`   | Yes (for emails)        | Sender email address for transactional emails                                                            |
 

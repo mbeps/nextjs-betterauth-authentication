@@ -66,8 +66,8 @@ export const auth = betterAuth({
   },
   socialProviders: {
     github: {
-      clientId: env.GITHUB_CLIENT_ID,
-      clientSecret: env.GITHUB_CLIENT_SECRET,
+      clientId: env.CLIENT_ID_GITHUB,
+      clientSecret: env.CLIENT_SECRET_GITHUB,
       mapProfileToUser: (profile: {
         public_repos?: number | string | null;
       }) => {
@@ -77,8 +77,8 @@ export const auth = betterAuth({
       },
     },
     discord: {
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
+      clientId: env.CLIENT_ID_DISCORD,
+      clientSecret: env.CLIENT_SECRET_DISCORD,
       mapProfileToUser: () => {
         return {
           favoriteNumber: 0,
