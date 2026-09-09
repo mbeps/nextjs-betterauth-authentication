@@ -1,6 +1,6 @@
+import { headers } from "next/headers";
 import { Card, CardContent } from "@/components/ui/card";
 import { auth } from "@/lib/auth/auth";
-import { headers } from "next/headers";
 import { SessionManagement } from "./session-management";
 
 /**

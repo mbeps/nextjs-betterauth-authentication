@@ -1,5 +1,5 @@
 import { Loader2Icon } from "lucide-react";
-import { ReactNode, Suspense } from "react";
+import { type ReactNode, Suspense } from "react";
 
 /**
  * Suspense boundary with a subtle loading indicator for tab panels.

@@ -1,7 +1,10 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,13 +14,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { authClient } from "@/lib/auth/auth-client";
 import { ROUTES } from "@/lib/routes";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { totpSchema, TotpFormData } from "@/schemas/totp";
+import { type TotpFormData, totpSchema } from "@/schemas/totp";
 
 /**
  * Form that accepts a 6-digit TOTP code during the two-factor challenge.

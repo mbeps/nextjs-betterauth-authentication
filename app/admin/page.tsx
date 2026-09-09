@@ -1,3 +1,8 @@
+import type { admin, UserWithRole } from "better-auth/plugins/admin";
+import { ArrowLeft, Users } from "lucide-react";
+import { headers } from "next/headers";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -14,10 +19,6 @@ import {
 } from "@/components/ui/table";
 import { auth } from "@/lib/auth/auth";
 import { ROUTES } from "@/lib/routes";
-import { ArrowLeft, Users } from "lucide-react";
-import { headers } from "next/headers";
-import Link from "next/link";
-import { redirect } from "next/navigation";
 import { UserRow } from "./_components/user-row";
 
 /**
@@ -26,24 +27,26 @@ import { UserRow } from "./_components/user-row";
  */
 export default async function AdminPage() {
   const session = await auth.api.getSession({ headers: await headers() });
+  const adminApi = auth.api as typeof auth.api &
+    ReturnType<typeof admin>["endpoints"];
 
   // Ensure only admins with list permission can view the dashboard.
   if (session == null) return redirect(ROUTES.AUTH.LOGIN);
-  const hasAccess = await auth.api.userHasPermission({
+  const hasAccess = await adminApi.userHasPermission({
     headers: await headers(),
-    body: { permission: { user: ["list"] } },
+    body: { permissions: { user: ["list"] } },
   });
   if (!hasAccess.success) return redirect(ROUTES.HOME);
 
-  const users = await auth.api.listUsers({
+  const users = await adminApi.listUsers({
     headers: await headers(),
     query: { limit: 100, sortBy: "createdAt", sortDirection: "desc" },
   });
 
   return (
-    <div className="mx-auto container my-6 px-4">
-      <Link href={ROUTES.HOME} className="inline-flex items-center mb-6">
-        <ArrowLeft className="size-4 mr-2" />
+    <div className="container mx-auto my-6 px-4">
+      <Link href={ROUTES.HOME} className="mb-6 inline-flex items-center">
+        <ArrowLeft className="mr-2 size-4" />
         Back to Home
       </Link>
 
@@ -69,7 +72,7 @@ export default async function AdminPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {users.users.map((user) => (
+                {users.users.map((user: UserWithRole) => (
                   <UserRow key={user.id} user={user} selfId={session.user.id} />
                 ))}
               </TableBody>

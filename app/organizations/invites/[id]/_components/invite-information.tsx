@@ -1,9 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { BetterAuthActionButton } from "@/components/auth/buttons/better-auth-action-button";
 import { authClient } from "@/lib/auth/auth-client";
 import { ROUTES } from "@/lib/routes";
-import { useRouter } from "next/navigation";
 
 /**
  * Displays actions for accepting or rejecting an organization invitation.
@@ -31,7 +31,7 @@ export function InviteInformation({
           });
           router.push(ROUTES.ORGANIZATIONS.DASHBOARD);
         },
-      }
+      },
     );
   }
   /**
@@ -43,7 +43,7 @@ export function InviteInformation({
       {
         invitationId: invitation.id,
       },
-      { onSuccess: () => router.push(ROUTES.HOME) }
+      { onSuccess: () => router.push(ROUTES.HOME) },
     );
   }
 

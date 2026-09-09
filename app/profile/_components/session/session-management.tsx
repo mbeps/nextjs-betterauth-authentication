@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { BetterAuthActionButton } from "@/components/auth/buttons/better-auth-action-button"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { authClient } from "@/lib/auth/auth-client"
-import { Session } from "better-auth"
-import { Monitor, Smartphone, Trash2 } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { UAParser } from "ua-parser-js"
+import type { Session } from "better-auth";
+import { Monitor, Smartphone, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { UAParser } from "ua-parser-js";
+import { BetterAuthActionButton } from "@/components/auth/buttons/better-auth-action-button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { authClient } from "@/lib/auth/auth-client";
 
 /**
  * Displays the current session and allows revoking other active sessions.
@@ -19,13 +19,13 @@ export function SessionManagement({
   sessions,
   currentSessionToken,
 }: {
-  sessions: Session[]
-  currentSessionToken: string
+  sessions: Session[];
+  currentSessionToken: string;
 }) {
-  const router = useRouter()
+  const router = useRouter();
 
-  const otherSessions = sessions.filter(s => s.token !== currentSessionToken)
-  const currentSession = sessions.find(s => s.token === currentSessionToken)
+  const otherSessions = sessions.filter((s) => s.token !== currentSessionToken);
+  const currentSession = sessions.find((s) => s.token === currentSessionToken);
 
   /**
    * Revokes every session except the current one.
@@ -34,9 +34,9 @@ export function SessionManagement({
   function revokeOtherSessions() {
     return authClient.revokeOtherSessions(undefined, {
       onSuccess: () => {
-        router.refresh()
+        router.refresh();
       },
-    })
+    });
   }
 
   return (
@@ -47,7 +47,7 @@ export function SessionManagement({
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-medium">Other Active Sessions</h3>
+          <h3 className="font-medium text-lg">Other Active Sessions</h3>
           {otherSessions.length > 0 && (
             <BetterAuthActionButton
               variant="destructive"
@@ -67,14 +67,14 @@ export function SessionManagement({
           </Card>
         ) : (
           <div className="space-y-3">
-            {otherSessions.map(session => (
+            {otherSessions.map((session) => (
               <SessionCard key={session.id} session={session} />
             ))}
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }
 
 /**
@@ -87,26 +87,26 @@ function SessionCard({
   session,
   isCurrentSession = false,
 }: {
-  session: Session
-  isCurrentSession?: boolean
+  session: Session;
+  isCurrentSession?: boolean;
 }) {
-  const router = useRouter()
-  const userAgentInfo = session.userAgent ? UAParser(session.userAgent) : null
+  const router = useRouter();
+  const userAgentInfo = session.userAgent ? UAParser(session.userAgent) : null;
 
   /**
    * Formats a human-readable browser and OS label from the user agent.
    * @returns Browser information string suitable for display.
    */
   function getBrowserInformation() {
-    if (userAgentInfo == null) return "Unknown Device"
+    if (userAgentInfo == null) return "Unknown Device";
     if (userAgentInfo.browser.name == null && userAgentInfo.os.name == null) {
-      return "Unknown Device"
+      return "Unknown Device";
     }
 
-    if (userAgentInfo.browser.name == null) return userAgentInfo.os.name
-    if (userAgentInfo.os.name == null) return userAgentInfo.browser.name
+    if (userAgentInfo.browser.name == null) return userAgentInfo.os.name;
+    if (userAgentInfo.os.name == null) return userAgentInfo.browser.name;
 
-    return `${userAgentInfo.browser.name}, ${userAgentInfo.os.name}`
+    return `${userAgentInfo.browser.name}, ${userAgentInfo.os.name}`;
   }
 
   /**
@@ -118,7 +118,7 @@ function SessionCard({
     return new Intl.DateTimeFormat(undefined, {
       dateStyle: "medium",
       timeStyle: "short",
-    }).format(new Date(date))
+    }).format(new Date(date));
   }
 
   /**
@@ -132,10 +132,10 @@ function SessionCard({
       },
       {
         onSuccess: () => {
-          router.refresh()
+          router.refresh();
         },
-      }
-    )
+      },
+    );
   }
 
   return (
@@ -153,10 +153,10 @@ function SessionCard({
               <Monitor />
             )}
             <div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Created: {formatDate(session.createdAt)}
               </p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Expires: {formatDate(session.expiresAt)}
               </p>
             </div>
@@ -174,5 +174,5 @@ function SessionCard({
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

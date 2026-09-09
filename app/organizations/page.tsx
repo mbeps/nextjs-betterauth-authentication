@@ -1,11 +1,11 @@
 import { ArrowLeft } from "lucide-react";
+import { headers } from "next/headers";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/auth";
 import { ROUTES } from "@/lib/routes";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-import { OrganizationSelect } from "./_components/select/organization-select";
 import { CreateOrganizationButton } from "./_components/buttons/create-organization-button";
+import { OrganizationSelect } from "./_components/select/organization-select";
 import { OrganizationTabs } from "./_components/tabs/organization-tabs";
 
 /**
@@ -19,12 +19,12 @@ export default async function OrganizationsPage() {
 
   return (
     <div className="container mx-auto my-6 px-4">
-      <Link href={ROUTES.HOME} className="inline-flex items-center mb-6">
-        <ArrowLeft className="size-4 mr-2" />
+      <Link href={ROUTES.HOME} className="mb-6 inline-flex items-center">
+        <ArrowLeft className="mr-2 size-4" />
         Back to Home
       </Link>
 
-      <div className="flex items-center mb-8 gap-2">
+      <div className="mb-8 flex items-center gap-2">
         <OrganizationSelect />
         <CreateOrganizationButton />
       </div>

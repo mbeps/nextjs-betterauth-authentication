@@ -1,30 +1,18 @@
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { auth } from "@/lib/auth/auth";
-import { ROUTES } from "@/lib/routes";
 import { ArrowLeft, Key, LinkIcon, Shield, Trash2, User } from "lucide-react";
 import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ProfileUpdateForm } from "./_components/profile/profile-update-form";
-import { SetPasswordButton } from "./_components/security/set-password-button";
-import { ChangePasswordForm } from "./_components/security/change-password-form";
-import { SessionManagement } from "./_components/session/session-management";
-import { AccountLinking } from "./_components/account/account-linking";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { auth } from "@/lib/auth/auth";
+import { ROUTES } from "@/lib/routes";
 import { AccountDeletion } from "./_components/account/account-deletion";
-import { TwoFactorAuth } from "./_components/security/two-factor-auth";
-import { PasskeyManagement } from "./_components/security/passkey-management";
 import { LinkedAccountsTab } from "./_components/account/linked-accounts-tab";
-import { SessionsTab } from "./_components/session/sessions-tab";
+import { ProfileUpdateForm } from "./_components/profile/profile-update-form";
 import { SecurityTab } from "./_components/security/security-tab";
+import { SessionsTab } from "./_components/session/sessions-tab";
 import { LoadingSuspense } from "./_components/shared/loading-suspense";
 
 const TAB_VALUES = {
@@ -43,21 +31,26 @@ export default async function ProfilePage() {
   const session = await auth.api.getSession({ headers: await headers() });
   // Redirect guests to the authentication flow.
   if (session == null) return redirect(ROUTES.AUTH.LOGIN);
+  const user = session.user as typeof session.user & {
+    favoriteNumber: number;
+    role?: string;
+    twoFactorEnabled?: boolean;
+  };
 
   return (
-    <div className="max-w-4xl mx-auto my-6 px-4">
+    <div className="mx-auto my-6 max-w-4xl px-4">
       <div className="mb-8">
-        <Link href={ROUTES.HOME} className="inline-flex items-center mb-6">
-          <ArrowLeft className="size-4 mr-2" />
+        <Link href={ROUTES.HOME} className="mb-6 inline-flex items-center">
+          <ArrowLeft className="mr-2 size-4" />
           Back to Home
         </Link>
         <div className="flex items-center space-x-4">
-          <div className="size-16 bg-muted rounded-full flex items-center justify-center overflow-hidden">
-            {session.user.image ? (
+          <div className="flex size-16 items-center justify-center overflow-hidden rounded-full bg-muted">
+            {user.image ? (
               <Image
                 width={64}
                 height={64}
-                src={session.user.image}
+                src={user.image}
                 alt="User Avatar"
                 className="object-cover"
               />
@@ -66,13 +59,13 @@ export default async function ProfilePage() {
             )}
           </div>
           <div className="flex-1">
-            <div className="flex gap-1 justify-between items-start">
-              <h1 className="text-3xl font-bold">
-                {session.user.name || "User Profile"}
+            <div className="flex items-start justify-between gap-1">
+              <h1 className="font-bold text-3xl">
+                {user.name || "User Profile"}
               </h1>
-              <Badge>{session.user.role}</Badge>
+              <Badge>{user.role}</Badge>
             </div>
-            <p className="text-muted-foreground">{session.user.email}</p>
+            <p className="text-muted-foreground">{user.email}</p>
           </div>
         </div>
       </div>
@@ -104,7 +97,7 @@ export default async function ProfilePage() {
         <TabsContent value={TAB_VALUES.PROFILE}>
           <Card>
             <CardContent>
-              <ProfileUpdateForm user={session.user} />
+              <ProfileUpdateForm user={user} />
             </CardContent>
           </Card>
         </TabsContent>
@@ -112,8 +105,8 @@ export default async function ProfilePage() {
         <TabsContent value={TAB_VALUES.SECURITY}>
           <LoadingSuspense>
             <SecurityTab
-              email={session.user.email}
-              isTwoFactorEnabled={session.user.twoFactorEnabled ?? false}
+              email={user.email}
+              isTwoFactorEnabled={user.twoFactorEnabled ?? false}
             />
           </LoadingSuspense>
         </TabsContent>

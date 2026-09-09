@@ -1,10 +1,10 @@
 "use client";
 
+import { UserX } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth/auth-client";
 import { ROUTES } from "@/lib/routes";
-import { UserX } from "lucide-react";
 import { BetterAuthActionButton } from "./better-auth-action-button";
-import { useRouter } from "next/navigation";
 
 /**
  * Renders a floating button that lets admins stop impersonation sessions.

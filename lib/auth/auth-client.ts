@@ -1,14 +1,14 @@
-import { createAuthClient } from "better-auth/react";
-import { auth } from "./auth";
-import {
-  inferAdditionalFields,
-  twoFactorClient,
-  adminClient,
-  organizationClient,
-} from "better-auth/client/plugins";
 import { passkeyClient } from "@better-auth/passkey/client";
+import {
+  adminClient,
+  inferAdditionalFields,
+  organizationClient,
+  twoFactorClient,
+} from "better-auth/client/plugins";
+import { createAuthClient } from "better-auth/react";
 import { ac, admin, user } from "@/components/auth/utils/permissions";
 import { ROUTES } from "../routes";
+import type { auth } from "./auth";
 import { GLOBAL_ROLES } from "./roles";
 
 /**

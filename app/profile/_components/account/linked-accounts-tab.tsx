@@ -1,7 +1,9 @@
+import { headers } from "next/headers";
 import { Card, CardContent } from "@/components/ui/card";
 import { auth } from "@/lib/auth/auth";
-import { headers } from "next/headers";
 import { AccountLinking } from "./account-linking";
+
+type Account = Awaited<ReturnType<typeof auth.api.listUserAccounts>>[number];
 
 /**
  * Server component that lists linked social accounts and masks credential providers.
@@ -12,7 +14,7 @@ export async function LinkedAccountsTab() {
     headers: await headers(),
   });
   const nonCredentialAccounts = accounts.filter(
-    (a) => a.providerId !== "credential"
+    (account: Account) => account.providerId !== "credential",
   );
 
   return (

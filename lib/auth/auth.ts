@@ -1,21 +1,22 @@
+import { passkey } from "@better-auth/passkey";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "@/drizzle/db";
-import { nextCookies } from "better-auth/next-js";
-import { sendPasswordResetEmail } from "../emails/password-reset-email";
-import { sendEmailVerificationEmail } from "../emails/email-verification";
 import { createAuthMiddleware } from "better-auth/api";
-import { sendWelcomeEmail } from "../emails/welcome-email";
-import { sendDeleteAccountVerificationEmail } from "../emails/delete-account-verification";
-import { twoFactor } from "better-auth/plugins/two-factor";
-import { passkey } from "@better-auth/passkey";
+import { nextCookies } from "better-auth/next-js";
 import { admin as adminPlugin } from "better-auth/plugins/admin";
 import { organization } from "better-auth/plugins/organization";
-import { ac, admin, user } from "@/components/auth/utils/permissions";
-import { sendOrganizationInviteEmail } from "../emails/organization-invite-email";
-import { GLOBAL_ROLES } from "./roles";
+import { twoFactor } from "better-auth/plugins/two-factor";
 import { desc, eq } from "drizzle-orm";
+import { ac, admin, user } from "@/components/auth/utils/permissions";
+import { db } from "@/drizzle/db";
 import { member } from "@/drizzle/schema";
+import { env } from "@/lib/env";
+import { sendDeleteAccountVerificationEmail } from "../emails/delete-account-verification";
+import { sendEmailVerificationEmail } from "../emails/email-verification";
+import { sendOrganizationInviteEmail } from "../emails/organization-invite-email";
+import { sendPasswordResetEmail } from "../emails/password-reset-email";
+import { sendWelcomeEmail } from "../emails/welcome-email";
+import { GLOBAL_ROLES } from "./roles";
 
 /**
  * Better Auth server configured with email, OAuth, passkey, and organization features.
@@ -24,10 +25,12 @@ import { member } from "@/drizzle/schema";
  */
 export const auth = betterAuth({
   appName: "Better Auth Demo",
+  secret: env.BETTER_AUTH_SECRET,
+  baseURL: env.BETTER_AUTH_URL,
   user: {
     changeEmail: {
       enabled: true,
-      sendChangeEmailVerification: async ({ user, url, newEmail }) => {
+      sendChangeEmailConfirmation: async ({ user, url, newEmail }: any) => {
         await sendEmailVerificationEmail({
           user: { ...user, email: newEmail },
           url,
@@ -36,7 +39,7 @@ export const auth = betterAuth({
     },
     deleteUser: {
       enabled: true,
-      sendDeleteAccountVerification: async ({ user, url }) => {
+      sendDeleteAccountVerification: async ({ user, url }: any) => {
         await sendDeleteAccountVerificationEmail({ user, url });
       },
     },
@@ -50,30 +53,32 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
-    sendResetPassword: async ({ user, url }) => {
+    sendResetPassword: async ({ user, url }: any) => {
       await sendPasswordResetEmail({ user, url });
     },
   },
   emailVerification: {
     autoSignInAfterVerification: true,
     sendOnSignUp: true,
-    sendVerificationEmail: async ({ user, url }) => {
+    sendVerificationEmail: async ({ user, url }: any) => {
       await sendEmailVerificationEmail({ user, url });
     },
   },
   socialProviders: {
     github: {
-      clientId: process.env.GITHUB_CLIENT_ID!,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-      mapProfileToUser: (profile) => {
+      clientId: env.CLIENT_ID_GITHUB,
+      clientSecret: env.CLIENT_SECRET_GITHUB,
+      mapProfileToUser: (profile: {
+        public_repos?: number | string | null;
+      }) => {
         return {
           favoriteNumber: Number(profile.public_repos) || 0,
         };
       },
     },
     discord: {
-      clientId: process.env.DISCORD_CLIENT_ID!,
-      clientSecret: process.env.DISCORD_CLIENT_SECRET!,
+      clientId: env.CLIENT_ID_DISCORD,
+      clientSecret: env.CLIENT_SECRET_DISCORD,
       mapProfileToUser: () => {
         return {
           favoriteNumber: 0,
@@ -89,7 +94,6 @@ export const auth = betterAuth({
       enabled: true,
       maxAge: 60 * 60 * 24 * 7, // 7 days cache duration
       strategy: "jwt", // JWT tokens for session validation
-      refreshCache: true, // Enable stateless refresh
     },
   },
   plugins: [
@@ -109,7 +113,7 @@ export const auth = betterAuth({
         organization,
         inviter,
         invitation,
-      }) => {
+      }: any) => {
         await sendOrganizationInviteEmail({
           invitation,
           inviter: inviter.user,
@@ -139,7 +143,7 @@ export const auth = betterAuth({
   databaseHooks: {
     session: {
       create: {
-        before: async (userSession) => {
+        before: async (userSession: any) => {
           const membership = await db.query.member.findFirst({
             where: eq(member.userId, userSession.userId),
             orderBy: desc(member.createdAt),

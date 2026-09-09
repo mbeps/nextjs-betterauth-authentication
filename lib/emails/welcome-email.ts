@@ -1,4 +1,4 @@
-import { sendEmail } from "./send-email"
+import { sendEmail } from "./send-email";
 
 /**
  * Greets newly registered users after successful sign-up.
@@ -19,5 +19,5 @@ export async function sendWelcomeEmail(user: { name: string; email: string }) {
       </div>
     `,
     text: `Hello ${user.name},\n\nThank you for signing up for our app! We're excited to have you on board.\n\nBest regards,\nYour App Team`,
-  })
+  });
 }

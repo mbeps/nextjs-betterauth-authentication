@@ -1,10 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { BetterAuthActionButton } from "@/components/auth/buttons/better-auth-action-button";
 import { authClient } from "@/lib/auth/auth-client";
 import { ROUTES } from "@/lib/routes";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 /**
  * Attempts automatic passkey sign-in and offers a manual passkey button.
@@ -23,7 +23,7 @@ export function PasskeyButton() {
           refetch();
           router.push(ROUTES.HOME);
         },
-      }
+      },
     );
   }, [router, refetch]);
 

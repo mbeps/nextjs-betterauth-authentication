@@ -1,5 +1,7 @@
 "use client";
 
+import { BetterAuthActionButton } from "@/components/auth/buttons/better-auth-action-button";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -8,9 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { authClient } from "@/lib/auth/auth-client";
-import { BetterAuthActionButton } from "@/components/auth/buttons/better-auth-action-button";
 import { ORG_ROLES } from "@/lib/auth/roles";
 
 /**
@@ -53,8 +53,8 @@ export function MembersTab() {
                   member.role === ORG_ROLES.OWNER
                     ? "default"
                     : member.role === ORG_ROLES.ADMIN
-                    ? "secondary"
-                    : "outline"
+                      ? "secondary"
+                      : "outline"
                 }
               >
                 {member.role}

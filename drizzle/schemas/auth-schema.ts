@@ -1,9 +1,9 @@
 import {
+  boolean,
+  integer,
   pgTable,
   text,
   timestamp,
-  boolean,
-  integer,
 } from "drizzle-orm/pg-core";
 import { INVITATION_STATUS, ORG_ROLES } from "@/lib/auth/roles";
 
@@ -97,6 +97,9 @@ export const twoFactor = pgTable("two_factor", {
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
+  verified: boolean("verified").default(true),
+  failedVerificationCount: integer("failed_verification_count").default(0),
+  lockedUntil: timestamp("locked_until"),
 });
 
 /**
@@ -157,6 +160,7 @@ export const invitation = pgTable("invitation", {
   role: text("role"),
   status: text("status").default(INVITATION_STATUS.PENDING).notNull(),
   expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
   inviterId: text("inviter_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
