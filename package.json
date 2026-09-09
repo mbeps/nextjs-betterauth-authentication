@@ -17,7 +17,8 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write --unsafe .",
     "format": "biome format --write .",
-    "ci": "biome ci ."
+    "ci": "biome ci .",
+    "test": "node --import ./lib/test-setup.ts --test lib/env.test.ts"
   },
   "dependencies": {
     "@better-auth/passkey": "^1.7.3",

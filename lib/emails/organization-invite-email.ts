@@ -1,3 +1,4 @@
+import { env } from "@/lib/env";
 import { ROUTES } from "../routes";
 import { sendEmail } from "./send-email";
 
@@ -31,7 +32,7 @@ export async function sendOrganizationInviteEmail({
         <p>${inviter.name} invited you to join the ${
           organization.name
         } organization. Please click the button below to accept/reject the invitation:</p>
-        <a href="${process.env.BETTER_AUTH_URL}${ROUTES.ORGANIZATIONS.INVITE(
+        <a href="${env.BETTER_AUTH_URL}${ROUTES.ORGANIZATIONS.INVITE(
           invitation.id,
         )}" style="background-color: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block; margin: 16px 0;">Manage Invitation</a>
         <p>Best regards,<br>Your App Team</p>
@@ -44,7 +45,7 @@ export async function sendOrganizationInviteEmail({
     } invited you to join the ${
       organization.name
     } organization. Please click the link below to accept/reject the invitation:\n\n${
-      process.env.BETTER_AUTH_URL
+      env.BETTER_AUTH_URL
     }${ROUTES.ORGANIZATIONS.INVITE(
       invitation.id,
     )}\n\nBest regards,\nYour App Team`,

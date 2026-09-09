@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import "./lib/env";
 
 /**
  * Next.js configuration enabling remote images for common OAuth providers.

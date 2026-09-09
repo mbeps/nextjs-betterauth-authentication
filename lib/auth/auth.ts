@@ -10,6 +10,7 @@ import { desc, eq } from "drizzle-orm";
 import { ac, admin, user } from "@/components/auth/utils/permissions";
 import { db } from "@/drizzle/db";
 import { member } from "@/drizzle/schema";
+import { env } from "@/lib/env";
 import { sendDeleteAccountVerificationEmail } from "../emails/delete-account-verification";
 import { sendEmailVerificationEmail } from "../emails/email-verification";
 import { sendOrganizationInviteEmail } from "../emails/organization-invite-email";
@@ -24,6 +25,8 @@ import { GLOBAL_ROLES } from "./roles";
  */
 export const auth = betterAuth({
   appName: "Better Auth Demo",
+  secret: env.BETTER_AUTH_SECRET,
+  baseURL: env.BETTER_AUTH_URL,
   user: {
     changeEmail: {
       enabled: true,
@@ -63,8 +66,8 @@ export const auth = betterAuth({
   },
   socialProviders: {
     github: {
-      clientId: process.env.GITHUB_CLIENT_ID!,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+      clientId: env.GITHUB_CLIENT_ID,
+      clientSecret: env.GITHUB_CLIENT_SECRET,
       mapProfileToUser: (profile: {
         public_repos?: number | string | null;
       }) => {
@@ -74,8 +77,8 @@ export const auth = betterAuth({
       },
     },
     discord: {
-      clientId: process.env.DISCORD_CLIENT_ID!,
-      clientSecret: process.env.DISCORD_CLIENT_SECRET!,
+      clientId: env.DISCORD_CLIENT_ID,
+      clientSecret: env.DISCORD_CLIENT_SECRET,
       mapProfileToUser: () => {
         return {
           favoriteNumber: 0,
