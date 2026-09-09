@@ -28,5 +28,6 @@
     "editor.defaultFormatter": "biomejs.biome"
   },
   "files.autoSave": "off",
-  "testing.automaticallyOpenPeekView": "never"
+  "testing.automaticallyOpenPeekView": "never",
+  "js/ts.tsserver.experimental.enableProjectDiagnostics": false
 }

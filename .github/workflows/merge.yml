@@ -31,6 +31,9 @@ jobs:
       - name: Run Type Check
         run: npx tsc --noEmit
 
+      - name: Run Tests
+        run: npm test
+
   build:
     needs: lint
     name: Build - Node ${{ matrix.node-version }}
