@@ -52,7 +52,7 @@ Transactional emails run through Postmark so you can trace every step from invit
 - Environment-driven configuration keeps credentials and sender details out of the codebase.
 
 # Requirements
-- Node.js 20 or above
+- Node.js 26 or above
 - PostgreSQL (Docker Compose file boots Postgres with persistence).
 - Better Auth secrets: `BETTER_AUTH_SECRET` and `BETTER_AUTH_URL`.
 - GitHub and Discord OAuth application credentials.

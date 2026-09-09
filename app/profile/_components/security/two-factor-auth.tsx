@@ -80,9 +80,13 @@ export function TwoFactorAuth({ isEnabled }: { isEnabled: boolean }) {
 
     if (result.error) {
       toast.error(result.error.message || "Failed to enable 2FA");
+      return;
     }
-    setTwoFactorData(result.data);
-    form.reset();
+
+    if (result.data && "totpURI" in result.data) {
+      setTwoFactorData(result.data);
+      form.reset();
+    }
   }
 
   if (twoFactorData != null) {
