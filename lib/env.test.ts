@@ -64,4 +64,14 @@ describe("validateEnv", () => {
     const clientEnv = validateEnv({}, false);
     assert.ok(clientEnv);
   });
+
+  it("skips validation when SKIP_ENV_VALIDATION is true", () => {
+    process.env.SKIP_ENV_VALIDATION = "true";
+    try {
+      const parsed = validateEnv({});
+      assert.ok(parsed);
+    } finally {
+      delete process.env.SKIP_ENV_VALIDATION;
+    }
+  });
 });

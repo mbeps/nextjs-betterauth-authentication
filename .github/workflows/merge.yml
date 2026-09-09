@@ -38,6 +38,17 @@ jobs:
     strategy:
       matrix:
         node-version: ['26.x', '24.x']
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+      BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
+      CLIENT_ID_GITHUB: ${{ secrets.CLIENT_ID_GITHUB }}
+      CLIENT_SECRET_GITHUB: ${{ secrets.CLIENT_SECRET_GITHUB }}
+      CLIENT_ID_DISCORD: ${{ secrets.CLIENT_ID_DISCORD }}
+      CLIENT_SECRET_DISCORD: ${{ secrets.CLIENT_SECRET_DISCORD }}
+      POSTMARK_SERVER_TOKEN: ${{ secrets.POSTMARK_SERVER_TOKEN }}
+      POSTMARK_FROM_EMAIL: ${{ secrets.POSTMARK_FROM_EMAIL }}
+      ARCJET_API_KEY: ${{ secrets.ARCJET_API_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
