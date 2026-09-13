@@ -29,7 +29,7 @@ import { createSlug } from "@/lib/create-slug";
 import {
   type CreateOrganizationForm,
   createOrganizationSchema,
-} from "@/schemas/create-organization";
+} from "@/schemas/organization/create-organization.schema";
 
 /**
  * Dialog form for creating a new organization and setting it active.

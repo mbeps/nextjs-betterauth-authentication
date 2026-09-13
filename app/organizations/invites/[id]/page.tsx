@@ -1,6 +1,7 @@
 import type { organization } from "better-auth/plugins/organization";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { InviteInformation } from "@/app/organizations/invites/[id]/_components/invite-information";
 import {
   Card,
   CardContent,
@@ -8,9 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ROUTES } from "@/config/routes";
 import { auth } from "@/lib/auth/auth";
-import { ROUTES } from "@/lib/routes";
-import { InviteInformation } from "./_components/invite-information";
 
 /**
  * Invitation landing page that lets users accept or reject organization invites.

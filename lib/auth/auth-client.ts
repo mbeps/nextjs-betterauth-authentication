@@ -6,10 +6,10 @@ import {
   twoFactorClient,
 } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
-import { ac, admin, user } from "@/components/auth/utils/permissions";
-import { ROUTES } from "../routes";
-import type { auth } from "./auth";
-import { GLOBAL_ROLES } from "./roles";
+import { ROUTES } from "@/config/routes";
+import type { auth } from "@/lib/auth/auth";
+import { ac, admin, user } from "@/lib/auth/permissions";
+import { GLOBAL_ROLES } from "@/lib/auth/roles";
 
 /**
  * Better Auth React client with passkey, two-factor, admin, and organization plugins.

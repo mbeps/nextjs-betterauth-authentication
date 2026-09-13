@@ -15,9 +15,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LoadingSwap } from "@/components/ui/loading-swap";
+import { ROUTES } from "@/config/routes";
 import { authClient } from "@/lib/auth/auth-client";
-import { ROUTES } from "@/lib/routes";
-import { type TotpFormData, totpSchema } from "@/schemas/totp";
+import {
+  type TotpFormData,
+  totpSchema,
+} from "@/schemas/two-factor/totp.schema";
 
 /**
  * Form that accepts a 6-digit TOTP code during the two-factor challenge.

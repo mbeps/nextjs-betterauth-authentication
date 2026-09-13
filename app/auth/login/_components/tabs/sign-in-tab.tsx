@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { PasskeyButton } from "@/app/auth/login/_components/buttons/passkey-button";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,10 +17,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
+import { ROUTES } from "@/config/routes";
 import { authClient } from "@/lib/auth/auth-client";
-import { ROUTES } from "@/lib/routes";
-import { type SignInForm, signInSchema } from "@/schemas/sign-in";
-import { PasskeyButton } from "../buttons/passkey-button";
+import { type SignInForm, signInSchema } from "@/schemas/auth/sign-in.schema";
 
 /**
  * Email and password sign-in form with passkey shortcut and password reset link.

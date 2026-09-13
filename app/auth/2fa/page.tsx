@@ -1,11 +1,11 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { TotpForm } from "@/app/auth/2fa/_components/forms/totp-form";
+import { BackupCodeTab } from "@/app/auth/2fa/_components/tabs/backup-code-tab";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ROUTES } from "@/config/routes";
 import { auth } from "@/lib/auth/auth";
-import { ROUTES } from "@/lib/routes";
-import { TotpForm } from "./_components/forms/totp-form";
-import { BackupCodeTab } from "./_components/tabs/backup-code-tab";
 
 const TAB_VALUES = {
   TOTP: "totp",

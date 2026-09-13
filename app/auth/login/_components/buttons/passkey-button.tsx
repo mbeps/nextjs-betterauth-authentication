@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { BetterAuthActionButton } from "@/components/auth/buttons/better-auth-action-button";
+import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
+import { ROUTES } from "@/config/routes";
 import { authClient } from "@/lib/auth/auth-client";
-import { ROUTES } from "@/lib/routes";
 
 /**
  * Attempts automatic passkey sign-in and offers a manual passkey button.

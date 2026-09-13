@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { BetterAuthActionButton } from "@/components/auth/buttons/better-auth-action-button";
+import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -34,7 +34,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { authClient } from "@/lib/auth/auth-client";
-import { type PasskeyForm, passkeySchema } from "@/schemas/passkey";
+import {
+  type PasskeyForm,
+  passkeySchema,
+} from "@/schemas/two-factor/passkey.schema";
 
 /**
  * Displays existing passkeys and provides controls for creating or deleting them.

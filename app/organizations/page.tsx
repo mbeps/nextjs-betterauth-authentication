@@ -2,11 +2,11 @@ import { ArrowLeft } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { CreateOrganizationButton } from "@/app/organizations/_components/buttons/create-organization-button";
+import { OrganizationSelect } from "@/app/organizations/_components/select/organization-select";
+import { OrganizationTabs } from "@/app/organizations/_components/tabs/organization-tabs";
+import { ROUTES } from "@/config/routes";
 import { auth } from "@/lib/auth/auth";
-import { ROUTES } from "@/lib/routes";
-import { CreateOrganizationButton } from "./_components/buttons/create-organization-button";
-import { OrganizationSelect } from "./_components/select/organization-select";
-import { OrganizationTabs } from "./_components/tabs/organization-tabs";
 
 /**
  * Organizations dashboard where members switch, create, and manage teams.

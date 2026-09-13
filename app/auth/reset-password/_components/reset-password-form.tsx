@@ -23,12 +23,12 @@ import {
 } from "@/components/ui/form";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
+import { ROUTES } from "@/config/routes";
 import { authClient } from "@/lib/auth/auth-client";
-import { ROUTES } from "@/lib/routes";
 import {
   type ResetPasswordForm,
   resetPasswordSchema,
-} from "@/schemas/reset-password";
+} from "@/schemas/auth/reset-password.schema";
 
 export default function ResetPasswordClient() {
   const router = useRouter();

@@ -1,6 +1,7 @@
 "use client";
 
-import { BetterAuthActionButton } from "@/components/auth/buttons/better-auth-action-button";
+import { CreateInviteButton } from "@/app/organizations/_components/buttons/create-invite-button";
+import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -12,7 +13,6 @@ import {
 } from "@/components/ui/table";
 import { authClient } from "@/lib/auth/auth-client";
 import { INVITATION_STATUS } from "@/lib/auth/roles";
-import { CreateInviteButton } from "../buttons/create-invite-button";
 
 /**
  * Shows pending invitations and allows cancellation or new invites.

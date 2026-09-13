@@ -2,6 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { SocialAuthButtons } from "@/app/auth/login/_components/buttons/social-auth-buttons";
+import { EmailVerification } from "@/app/auth/login/_components/forms/email-verification";
+import { ForgotPassword } from "@/app/auth/login/_components/forms/forgot-password";
+import { SignInTab } from "@/app/auth/login/_components/tabs/sign-in-tab";
+import { SignUpTab } from "@/app/auth/login/_components/tabs/sign-up-tab";
 import {
   Card,
   CardContent,
@@ -11,13 +16,8 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ROUTES } from "@/config/routes";
 import { authClient } from "@/lib/auth/auth-client";
-import { ROUTES } from "@/lib/routes";
-import { SocialAuthButtons } from "./_components/buttons/social-auth-buttons";
-import { EmailVerification } from "./_components/forms/email-verification";
-import { ForgotPassword } from "./_components/forms/forgot-password";
-import { SignInTab } from "./_components/tabs/sign-in-tab";
-import { SignUpTab } from "./_components/tabs/sign-up-tab";
 
 const TAB_VALUES = {
   SIGN_IN: "signin",

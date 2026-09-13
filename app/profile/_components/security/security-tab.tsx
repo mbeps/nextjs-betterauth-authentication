@@ -1,5 +1,9 @@
 import type { passkey } from "@better-auth/passkey";
 import { headers } from "next/headers";
+import { ChangePasswordForm } from "@/app/profile/_components/security/change-password-form";
+import { PasskeyManagement } from "@/app/profile/_components/security/passkey-management";
+import { SetPasswordButton } from "@/app/profile/_components/security/set-password-button";
+import { TwoFactorAuth } from "@/app/profile/_components/security/two-factor-auth";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -9,10 +13,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { auth } from "@/lib/auth/auth";
-import { ChangePasswordForm } from "./change-password-form";
-import { PasskeyManagement } from "./passkey-management";
-import { SetPasswordButton } from "./set-password-button";
-import { TwoFactorAuth } from "./two-factor-auth";
 
 type Account = Awaited<ReturnType<typeof auth.api.listUserAccounts>>[number];
 

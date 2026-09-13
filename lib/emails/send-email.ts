@@ -1,7 +1,5 @@
-import { ServerClient } from "postmark";
-import { env } from "@/lib/env";
-
-const postmarkClient = new ServerClient(env.POSTMARK_SERVER_TOKEN);
+import { env } from "@/config/env";
+import { postmarkClient } from "@/utils/postmark/client";
 
 /**
  * Sends a transactional email through the configured Postmark client.

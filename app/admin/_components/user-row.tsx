@@ -25,9 +25,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { ROUTES } from "@/config/routes";
 import { authClient } from "@/lib/auth/auth-client";
 import { GLOBAL_ROLES } from "@/lib/auth/roles";
-import { ROUTES } from "@/lib/routes";
 
 /**
  * Row renderer for the admin users table with impersonation and moderation actions.

@@ -36,7 +36,7 @@ import { ORG_ROLES } from "@/lib/auth/roles";
 import {
   type CreateInviteForm,
   createInviteSchema,
-} from "@/schemas/create-invite";
+} from "@/schemas/organization/create-invite.schema";
 
 /**
  * Dialog-triggered form for inviting members to the active organization.

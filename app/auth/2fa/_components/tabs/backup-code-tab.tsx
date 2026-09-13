@@ -15,9 +15,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LoadingSwap } from "@/components/ui/loading-swap";
+import { ROUTES } from "@/config/routes";
 import { authClient } from "@/lib/auth/auth-client";
-import { ROUTES } from "@/lib/routes";
-import { type BackupCodeForm, backupCodeSchema } from "@/schemas/backup-code";
+import {
+  type BackupCodeForm,
+  backupCodeSchema,
+} from "@/schemas/two-factor/backup-code.schema";
 
 /**
  * Backup code verification tab for two-factor authentication.
