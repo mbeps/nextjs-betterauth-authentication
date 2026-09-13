@@ -22,9 +22,20 @@ import {
 } from "@/schemas/auth/forgot-password.schema";
 
 /**
- * Form that requests a password reset email for the provided address.
- * @param openSignInTab Callback used to return to the sign-in tab.
- * @returns Forgot password form component.
+ * Client form component enabling self-service password reset requests.
+ * Executes as a Client Component ("use client") utilizing React Hook Form, Zod validation,
+ * and the Better Auth password reset client API.
+ *
+ * Security Context & Flow:
+ * - Accepts an account email address, validating syntax against `forgotPasswordSchema`.
+ * - Triggers `authClient.requestPasswordReset` specifying `ROUTES.AUTH.RESET_PASSWORD` (`/auth/reset-password`)
+ *   as the destination URL embedded in the generated security token email link.
+ * - Displays success or failure alerts via toast notifications without leaking whether an email address exists.
+ * - Provides a return navigation control (`openSignInTab`) to switch back to the credentials sign-in view.
+ *
+ * @param props - Component properties containing the callback to return to the sign-in tab
+ * @returns Client-rendered password recovery form with input field, back control, and submit action
+ * @author Maruf Bepary
  */
 export function ForgotPassword({
   openSignInTab,
@@ -41,8 +52,10 @@ export function ForgotPassword({
   const { isSubmitting } = form.formState;
 
   /**
-   * Sends a password reset email and reports success via toast notifications.
-   * @param data Form payload containing the email address.
+   * Submits the user's email address to request a secure password reset link.
+   *
+   * @param data - Validated form payload containing the user's email address
+   * @author Maruf Bepary
    */
   async function handleForgotPassword(data: ForgotPasswordForm) {
     await authClient.requestPasswordReset(

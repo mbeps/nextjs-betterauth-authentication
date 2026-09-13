@@ -3,11 +3,21 @@ import { ROUTES } from "@/config/routes";
 import { sendEmail } from "@/lib/emails/send-email";
 
 /**
- * Notifies a user that they have been invited to join an organization.
- * @param invitation Invitation payload supplied by Better Auth.
- * @param inviter User who initiated the invitation.
- * @param organization Organization that issued the invite.
- * @param email Recipient email address for the invitee.
+ * Notifies a user by email that they have been invited to join an organization.
+ * Triggered by the Better Auth organization plugin during membership invitations.
+ * Builds an invitation action link using application routing helpers and delivers
+ * both HTML and text representations prompting the invitee to accept or decline.
+ *
+ * @param options - Organization invitation dispatch options
+ * @param options.invitation - Invitation metadata containing unique invite ID
+ * @param options.inviter - Inviting member profile containing display name
+ * @param options.organization - Target organization entity details
+ * @param options.email - Recipient email address for the invited user
+ * @returns Promise resolving upon successful message transmission
+ * @throws {Error} When Postmark fails to deliver the invitation email
+ * @see ROUTES.ORGANIZATIONS.INVITE for route generation
+ * @see sendEmail for the email delivery transport
+ * @author Maruf Bepary
  */
 export async function sendOrganizationInviteEmail({
   invitation,

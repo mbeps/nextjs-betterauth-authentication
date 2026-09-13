@@ -15,6 +15,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ROUTES } from "@/config/routes";
 import { auth } from "@/lib/auth/auth";
 
+/**
+ * Tab identifiers for the user profile dashboard.
+ */
 const TAB_VALUES = {
   PROFILE: "profile",
   SECURITY: "security",
@@ -24,8 +27,14 @@ const TAB_VALUES = {
 } as const;
 
 /**
- * Profile dashboard that surfaces personal data, security tools, and danger zone actions.
- * @returns Server-rendered profile page requiring an authenticated session.
+ * Server-rendered profile management dashboard coordinating account and security controls.
+ * Authenticates user credentials server-side, redirecting unauthenticated visitors to login.
+ * Renders user profile summary and exposes tabbed sections for updating personal information,
+ * configuring security features (password management, 2FA, WebAuthn passkeys), auditing and
+ * revoking active device sessions, managing linked OAuth accounts, and deleting user accounts.
+ *
+ * @returns Server-rendered profile dashboard page
+ * @author Maruf Bepary
  */
 export default async function ProfilePage() {
   const session = await auth.api.getSession({ headers: await headers() });

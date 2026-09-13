@@ -18,34 +18,79 @@ import { sendOrganizationInviteEmail } from "@/lib/emails/organization-invite-em
 import { sendPasswordResetEmail } from "@/lib/emails/password-reset-email";
 import { sendWelcomeEmail } from "@/lib/emails/welcome-email";
 
-type EmailUser = { name: string; email: string };
+/**
+ * Basic user profile payload required for sending email notifications.
+ */
+type EmailUser = {
+  /** Recipient display name. */
+  name: string;
+  /** Recipient email address. */
+  email: string;
+};
 
+/**
+ * Payload provided by Better Auth when requesting email address change confirmation.
+ */
 type ChangeEmailPayload = {
+  /** Current user profile data. */
   user: EmailUser;
+  /** Verification callback URL with token. */
   url: string;
+  /** New unverified email address to be confirmed. */
   newEmail: string;
 };
 
+/**
+ * Generic email payload provided by Better Auth for single-user verification workflows.
+ */
 type UserEmailPayload = {
+  /** Target user recipient. */
   user: EmailUser;
+  /** Verification or action callback URL. */
   url: string;
 };
 
+/**
+ * Payload provided by the Better Auth organization plugin when dispatching invitation emails.
+ */
 type OrganizationInvitePayload = {
+  /** Invited member's destination email address. */
   email: string;
-  organization: { name: string };
-  inviter: { user: { name: string } };
-  invitation: { id: string };
+  /** Target organization details. */
+  organization: {
+    /** Name of the inviting organization. */
+    name: string;
+  };
+  /** Inviting user information. */
+  inviter: {
+    user: {
+      /** Display name of the user who issued the invitation. */
+      name: string;
+    };
+  };
+  /** Generated invitation token metadata. */
+  invitation: {
+    /** Unique invitation identifier. */
+    id: string;
+  };
 };
 
+/**
+ * Session persistence payload processed during session creation database hooks.
+ */
 type SessionCreatePayload = {
+  /** Identifier of the user establishing a new session. */
   userId: string;
 } & Record<string, unknown>;
 
 /**
- * Better Auth server configured with email, OAuth, passkey, and organization features.
- * Uses JWT-based stateless sessions stored in encrypted cookies.
- * @see https://docs.better-auth.com
+ * Central Better Auth server instance configured with Drizzle ORM and authentication plugins.
+ * Encapsulates credentials authentication, OAuth (GitHub, Discord), Passkeys, Two-Factor Authentication (2FA),
+ * multi-tenant Organizations, and Role-Based Access Control (RBAC).
+ * Uses JWT-based stateless sessions stored in encrypted HTTP-only cookies with automatic session refresh.
+ *
+ * @see {@link https://docs.better-auth.com}
+ * @author Maruf Bepary
  */
 export const auth = betterAuth({
   appName: "Better Auth Demo",

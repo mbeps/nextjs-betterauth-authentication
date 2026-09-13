@@ -32,8 +32,14 @@ import {
 } from "@/schemas/organization/create-organization.schema";
 
 /**
- * Dialog form for creating a new organization and setting it active.
- * @returns Button that opens the organization creation dialog.
+ * Interactive button and modal dialog for registering a new organization workspace.
+ * Uses React Hook Form with Zod validation (`createOrganizationSchema`) to manage inputs,
+ * automatically generates a URL-friendly slug from the workspace name, and persists the new
+ * organization via Better Auth. Upon successful creation, the new organization is immediately
+ * activated as the active workspace session.
+ *
+ * @returns Dialog trigger button and modal form for creating an organization
+ * @author Maruf Bepary
  */
 export function CreateOrganizationButton() {
   const [open, setOpen] = useState(false);
@@ -47,8 +53,12 @@ export function CreateOrganizationButton() {
   const { isSubmitting } = form.formState;
 
   /**
-   * Creates an organization and makes it the active context on success.
-   * @param data Form payload containing the organization name.
+   * Submits organization creation payload to Better Auth and updates active workspace context.
+   * Generates a slug from the submitted name, invokes `organization.create`, resets the form,
+   * dismisses the dialog, and automatically sets the newly created organization as active.
+   *
+   * @param data - Validated form values containing the organization name
+   * @author Maruf Bepary
    */
   async function handleCreateOrganization(data: CreateOrganizationForm) {
     const slug = createSlug(data.name);

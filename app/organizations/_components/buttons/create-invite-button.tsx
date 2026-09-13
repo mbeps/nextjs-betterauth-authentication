@@ -39,8 +39,14 @@ import {
 } from "@/schemas/organization/create-invite.schema";
 
 /**
- * Dialog-triggered form for inviting members to the active organization.
- * @returns Invite button component with modal form.
+ * Button and modal dialog for inviting new collaborators to the active organization.
+ * Manages an invitation form validated with Zod (`createInviteSchema`) that collects
+ * the invitee's email address and assigns a target role (`member` or `admin`).
+ * Dispatches Better Auth's `organization.inviteMember` API which generates a cryptographically
+ * secure invite token and triggers an invitation email.
+ *
+ * @returns Dialog trigger button and modal form for sending invitations
+ * @author Maruf Bepary
  */
 export function CreateInviteButton() {
   const [open, setOpen] = useState(false);
@@ -56,8 +62,12 @@ export function CreateInviteButton() {
   const { isSubmitting } = form.formState;
 
   /**
-   * Creates an invitation and closes the dialog when successful.
-   * @param data Form values including email and role selection.
+   * Dispatches the invitation request to Better Auth and resets the dialog.
+   * On failure, displays an error notification via Sonner toast; on success, clears
+   * the form inputs and closes the modal dialog.
+   *
+   * @param data - Validated form payload containing recipient email and role
+   * @author Maruf Bepary
    */
   async function handleCreateInvite(data: CreateInviteForm) {
     await authClient.organization.inviteMember(data, {

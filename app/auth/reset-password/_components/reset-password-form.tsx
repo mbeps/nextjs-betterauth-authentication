@@ -30,6 +30,22 @@ import {
   resetPasswordSchema,
 } from "@/schemas/auth/reset-password.schema";
 
+/**
+ * Client form component handling secure password reset submission using a tokenized URL.
+ * Executes as a Client Component ("use client") parsing search parameters and submitting
+ * password updates via Better Auth.
+ *
+ * Security Context & Token Handling:
+ * - Extracts `token` and `error` parameters from the active URL query string using `useSearchParams`.
+ * - If the token is missing or if the query string indicates an error (e.g. invalid or expired token),
+ *   aborts form rendering and displays an "Invalid Reset Link" error card linking back to `/auth/login`.
+ * - Enforces client-side password strength validation rules defined in `resetPasswordSchema`.
+ * - Calls `authClient.resetPassword` passing the verified token and new plaintext password over TLS.
+ * - On successful update, displays a confirmation toast and smoothly redirects to `ROUTES.AUTH.LOGIN`.
+ *
+ * @returns Client-rendered password reset form or invalid link notification card
+ * @author Maruf Bepary
+ */
 export default function ResetPasswordClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -45,6 +61,12 @@ export default function ResetPasswordClient() {
 
   const { isSubmitting } = form.formState;
 
+  /**
+   * Submits the updated password alongside the reset token to the Better Auth backend.
+   *
+   * @param data - Validated form payload containing the newly chosen password
+   * @author Maruf Bepary
+   */
   async function handleResetPassword(data: ResetPasswordForm) {
     if (token == null) return;
 

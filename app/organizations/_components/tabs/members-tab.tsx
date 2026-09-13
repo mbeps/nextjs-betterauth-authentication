@@ -14,17 +14,26 @@ import { authClient } from "@/lib/auth/auth-client";
 import { ORG_ROLES } from "@/lib/auth/roles";
 
 /**
- * Lists active organization members with removal controls.
- * @returns Members tab content driven by the active organization hook.
+ * Tab panel rendering the active organization's member roster and role badges.
+ * Subscribes reactively to the current organization and session via Better Auth client hooks.
+ * Displays member profile details, maps roles (owner, admin, member) to distinct visual badges,
+ * and provides confirmation-protected deletion actions to revoke organization memberships.
+ *
+ * @returns Roster table displaying members and role-based removal controls
+ * @author Maruf Bepary
  */
 export function MembersTab() {
   const { data: activeOrganization } = authClient.useActiveOrganization();
   const { data: session } = authClient.useSession();
 
   /**
-   * Removes a member from the organization via Better Auth.
-   * @param memberId Member identifier supplied by Better Auth.
-   * @returns Promise that resolves when the server call finishes.
+   * Revokes membership for a specified user within the active organization.
+   * Dispatches Better Auth's `organization.removeMember` API call, which revokes organization-scoped
+   * permissions and updates active organization state reactively.
+   *
+   * @param memberId - Unique membership identifier or email address to remove
+   * @returns Promise resolving to the removal response from Better Auth
+   * @author Maruf Bepary
    */
   function removeMember(memberId: string) {
     return authClient.organization.removeMember({

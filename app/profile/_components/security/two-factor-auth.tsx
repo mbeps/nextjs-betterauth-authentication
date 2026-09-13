@@ -25,15 +25,29 @@ import {
   twoFactorAuthSchema,
 } from "@/schemas/two-factor/two-factor-auth.schema";
 
+/**
+ * Provisioning payload containing TOTP configuration and emergency recovery codes.
+ */
 type TwoFactorData = {
+  /**
+   * Standardized otpauth:// URI encoded into the QR code for authenticator apps.
+   */
   totpURI: string;
+  /**
+   * One-time backup recovery codes for bypassing TOTP in emergency scenarios.
+   */
   backupCodes: string[];
 };
 
 /**
- * Manages enabling or disabling TOTP-based two-factor authentication.
- * @param isEnabled Flag indicating whether 2FA is already active.
- * @returns Two-factor form that switches between enable and disable states.
+ * Interactive management component for configuring TOTP two-factor authentication.
+ * Dynamically toggles between enabling and disabling states based on current 2FA status.
+ * Requires password verification before modifying security state. When enabling, requests a
+ * new TOTP secret from Better Auth and transitions into the interactive QR code verification workflow.
+ *
+ * @param props - Component props indicating whether two-factor authentication is currently active
+ * @returns Form for toggling 2FA or QR code verification flow
+ * @author Maruf Bepary
  */
 export function TwoFactorAuth({ isEnabled }: { isEnabled: boolean }) {
   const [twoFactorData, setTwoFactorData] = useState<TwoFactorData | null>(
@@ -49,7 +63,10 @@ export function TwoFactorAuth({ isEnabled }: { isEnabled: boolean }) {
 
   /**
    * Disables two-factor authentication after verifying the user's password.
-   * @param data Form payload containing the account password.
+   * Calls Better Auth's `twoFactor.disable` endpoint, clearing 2FA requirements and refreshing session state.
+   *
+   * @param data - Form values containing the user's account password
+   * @author Maruf Bepary
    */
   async function handleDisableTwoFactorAuth(data: TwoFactorAuthForm) {
     await authClient.twoFactor.disable(
@@ -69,8 +86,11 @@ export function TwoFactorAuth({ isEnabled }: { isEnabled: boolean }) {
   }
 
   /**
-   * Enables two-factor authentication and displays verification instructions.
-   * @param data Form payload containing the account password.
+   * Initiates two-factor authentication enablement by verifying the user's password.
+   * Calls Better Auth's `twoFactor.enable` endpoint to generate a TOTP secret, URI, and backup codes.
+   *
+   * @param data - Form values containing the user's account password
+   * @author Maruf Bepary
    */
   async function handleEnableTwoFactorAuth(data: TwoFactorAuthForm) {
     const result = await authClient.twoFactor.enable({
@@ -137,11 +157,14 @@ export function TwoFactorAuth({ isEnabled }: { isEnabled: boolean }) {
 }
 
 /**
- * Verifies a newly enabled TOTP setup and reveals backup codes.
- * @param totpURI QR code value produced by Better Auth.
- * @param backupCodes Codes that can be used when the authenticator is unavailable.
- * @param onDone Callback invoked when the verification flow completes.
- * @returns Verification form and backup code viewer.
+ * Step-by-step QR code verification subflow and emergency recovery code display.
+ * Generates a scannable QR code from the `totpURI` (as well as an extracted plaintext secret for manual entry).
+ * Prompts the user to enter a 6-digit TOTP token to verify synchronization before activating 2FA.
+ * Once verified via `verifyTotp`, surfaces emergency backup recovery codes for safe keeping.
+ *
+ * @param props - Component props containing TOTP URI, backup codes array, and completion callback
+ * @returns Verification form and backup code view
+ * @author Maruf Bepary
  */
 function QRCodeVerify({
   totpURI,
@@ -158,8 +181,11 @@ function QRCodeVerify({
   const { isSubmitting } = form.formState;
 
   /**
-   * Verifies the TOTP code entered by the user to finalize 2FA setup.
-   * @param data Form payload containing the 6-digit token.
+   * Verifies the submitted TOTP token against Better Auth to finalize 2FA enrollment.
+   * On success, reveals emergency recovery backup codes and refreshes the router.
+   *
+   * @param data - Form values containing the 6-digit TOTP token
+   * @author Maruf Bepary
    */
   async function handleQrCode(data: QrForm) {
     await authClient.twoFactor.verifyTotp(

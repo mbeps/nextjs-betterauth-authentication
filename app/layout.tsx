@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 /**
- * Default SEO metadata shared across all routes.
+ * Default global application metadata configuration for SEO and browser tab titles.
  */
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -23,9 +23,14 @@ export const metadata: Metadata = {
 };
 
 /**
- * Root layout that wires global fonts, theming, and toast providers.
- * @param children Page content rendered within the layout shell.
- * @returns HTML scaffold shared across all routes.
+ * Root application layout component wrapping all routes in the Next.js App Router.
+ * Operates as a React Server Component (RSC) to establish the HTML shell, configure Google Fonts
+ * (Geist and Geist Mono font variables), enforce a default dark theme styling, and mount
+ * cross-application interactive utilities such as Sonner toasts and an impersonation warning banner.
+ *
+ * @param props - Root layout properties containing child route content
+ * @returns Root HTML document structure enclosing all nested page components
+ * @author Maruf Bepary
  */
 export default function RootLayout({
   children,

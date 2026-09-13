@@ -1,8 +1,17 @@
 import { sendEmail } from "@/lib/emails/send-email";
 
 /**
- * Greets newly registered users after successful sign-up.
- * @param user User profile details used to personalize the message.
+ * Greets newly registered users with an introductory welcome email after successful sign-up.
+ * Dispatched automatically from Better Auth post-registration lifecycle hooks (`/sign-up`).
+ * Delivers formatted HTML and plain-text greeting messages.
+ *
+ * @param user - Newly registered user profile details
+ * @param user.name - Recipient user display name
+ * @param user.email - Recipient user destination email address
+ * @returns Promise resolving upon successful message transmission
+ * @throws {Error} When Postmark fails to deliver the welcome email
+ * @see sendEmail for the email delivery transport
+ * @author Maruf Bepary
  */
 export async function sendWelcomeEmail(user: { name: string; email: string }) {
   await sendEmail({

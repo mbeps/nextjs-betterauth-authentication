@@ -12,8 +12,15 @@ import { ac, admin, user } from "@/lib/auth/permissions";
 import { GLOBAL_ROLES } from "@/lib/auth/roles";
 
 /**
- * Better Auth React client with passkey, two-factor, admin, and organization plugins.
- * @see https://docs.better-auth.com/client/react
+ * Better Auth client-side SDK instance for React and browser components.
+ * Configured with isomorphic plugins matching the server configuration:
+ * Passkeys, Two-Factor Authentication (with automated redirect to 2FA challenge),
+ * Admin access control, Organization management, and inferred custom user fields.
+ * Use this client across UI components and client hooks for authentication, session querying, and user management.
+ *
+ * @see {@link https://docs.better-auth.com/client/react}
+ * @see auth for corresponding server configuration
+ * @author Maruf Bepary
  */
 export const authClient = createAuthClient({
   plugins: [

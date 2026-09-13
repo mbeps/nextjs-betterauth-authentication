@@ -13,14 +13,26 @@ import { ROUTES } from "@/config/routes";
 import { auth } from "@/lib/auth/auth";
 
 /**
- * Invitation landing page that lets users accept or reject organization invites.
- * @param params Route params containing the invitation identifier.
- * @returns Server-rendered invitation page gated behind authentication.
+ * Route parameter contract for dynamic organization invitation URLs.
  */
 interface InvitationPageProps {
+  /**
+   * Promise resolving to route parameters including the unique invitation identifier.
+   */
   params: Promise<{ id: string }>;
 }
 
+/**
+ * Server-rendered invitation landing page for joining an organization.
+ * Enforces session authentication by redirecting unauthenticated visitors to login.
+ * Fetches invitation metadata securely on the server via Better Auth's `getInvitation` endpoint.
+ * If the invitation ID is invalid, expired, or not found, redirects the user to the home page;
+ * otherwise displays invitation details and interactive acceptance/rejection actions.
+ *
+ * @param props - Next.js page properties containing dynamic route parameters
+ * @returns Server-rendered card displaying organization invite details and actions
+ * @author Maruf Bepary
+ */
 export default async function InvitationPage({ params }: InvitationPageProps) {
   const session = await auth.api.getSession({ headers: await headers() });
   const organizationApi = auth.api as typeof auth.api &

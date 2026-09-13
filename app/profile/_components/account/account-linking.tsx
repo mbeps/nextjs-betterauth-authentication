@@ -13,12 +13,20 @@ import {
   type SupportedOAuthProvider,
 } from "@/lib/auth/o-auth-providers";
 
+/**
+ * Inferred account representation for user authentication providers.
+ */
 type Account = Awaited<ReturnType<typeof auth.api.listUserAccounts>>[number];
 
 /**
- * Lists linked OAuth accounts and offers buttons to link or unlink providers.
- * @param currentAccounts Accounts currently associated with the user.
- * @returns Account linking layout composed of provider cards.
+ * Interactive management panel for connecting and disconnecting third-party OAuth providers.
+ * Displays currently linked federated accounts with connection timestamps and unlinking actions.
+ * Computes available unlinked social providers from `SUPPORTED_OAUTH_PROVIDERS`, allowing users
+ * to link additional authentication providers (e.g. GitHub, Google, Discord) for flexible sign-in.
+ *
+ * @param props - Component props containing the user's currently linked non-credential accounts
+ * @returns Federated identity management interface
+ * @author Maruf Bepary
  */
 export function AccountLinking({
   currentAccounts,
@@ -65,10 +73,14 @@ export function AccountLinking({
 }
 
 /**
- * Provider-specific card that shows link status and actions.
- * @param provider OAuth provider identifier.
- * @param account Optional linked account metadata.
- * @returns Card component with link or unlink button.
+ * Interactive card representing a single OAuth provider's connection status and action controls.
+ * Resolves brand metadata (display name, brand icon) from `SUPPORTED_OAUTH_PROVIDER_DETAILS`.
+ * Renders a "Link" action initiating OAuth redirection for unlinked providers, or an "Unlink"
+ * destructive action to disconnect an active social login association.
+ *
+ * @param props - Component props containing the provider key and optional existing account metadata
+ * @returns Provider card with connection status and link/unlink action triggers
+ * @author Maruf Bepary
  */
 function AccountCard({
   provider,
@@ -88,8 +100,12 @@ function AccountCard({
   };
 
   /**
-   * Begins the social account linking flow.
-   * @returns Promise that resolves when the linking redirect completes.
+   * Initiates the OAuth social account linking handshake.
+   * Dispatches Better Auth's `linkSocial` API with the specified provider and callback URL,
+   * redirecting the browser to the third-party authorization consent screen.
+   *
+   * @returns Promise resolving when the OAuth redirect begins
+   * @author Maruf Bepary
    */
   function linkAccount() {
     return authClient.linkSocial({
@@ -99,8 +115,12 @@ function AccountCard({
   }
 
   /**
-   * Unlinks the current social account and refreshes profile data.
-   * @returns Promise describing the unlink operation result.
+   * Disconnects an existing social provider from the user's account.
+   * Dispatches Better Auth's `unlinkAccount` API with the specific account identifier,
+   * removing the third-party identity association and refreshing the router on success.
+   *
+   * @returns Promise describing the unlink operation result
+   * @author Maruf Bepary
    */
   function unlinkAccount() {
     if (account == null) {

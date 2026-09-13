@@ -22,8 +22,24 @@ import { ROUTES } from "@/config/routes";
 import { auth } from "@/lib/auth/auth";
 
 /**
- * Server-rendered admin dashboard listing users and management actions.
- * @returns Admin page component guarded by Better Auth permissions.
+ * Server-rendered administration console page for managing registered users, roles, and privileges.
+ * Executes as a React Server Component (RSC) enforcing strict two-tiered server-side access control.
+ *
+ * Security Context & Permission Checks:
+ * 1. Authentication Gate: Inspects incoming request headers using `auth.api.getSession`. If the visitor
+ *    is unauthenticated, they are immediately redirected to the login portal (`/auth/login`).
+ * 2. Authorization Gate: Evaluates RBAC permissions via the Better Auth Admin plugin endpoint
+ *    `adminApi.userHasPermission` verifying whether the actor possesses `user:list` permissions.
+ *    Unauthorized or non-admin actors are redirected to the application homepage (`/`).
+ *
+ * User Flows & Data Fetching:
+ * - Fetches up to 100 registered accounts ordered chronologically descending using `adminApi.listUsers`.
+ * - Renders a tabular management interface containing user avatars, names, emails, assigned roles, and creation dates.
+ * - Delegates row-level interactive mutations (role modification, account bans/unbans, impersonation, deletion)
+ *   to the client-side `UserRow` component, forwarding `session.user.id` as `selfId` to prevent self-destructive operations.
+ *
+ * @returns Server-rendered administrative user management dashboard
+ * @author Maruf Bepary
  */
 export default async function AdminPage() {
   const session = await auth.api.getSession({ headers: await headers() });

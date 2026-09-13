@@ -23,12 +23,21 @@ import {
   profileUpdateSchema,
 } from "@/schemas/profile/profile-update.schema";
 
+/**
+ * Inferred parameter payload type for Better Auth user profile updates.
+ */
 type UpdateUserPayload = Parameters<typeof authClient.updateUser>[0];
 
 /**
- * Form that updates profile metadata and triggers email change verification.
- * @param user Initial user data used to seed the form.
- * @returns Controlled profile update form component.
+ * Client form component for modifying user profile attributes and requesting email changes.
+ * Manages form state with React Hook Form and Zod schema validation (`profileUpdateSchema`).
+ * Dispatches profile metadata updates (such as name and custom database fields like `favoriteNumber`)
+ * via Better Auth's `updateUser`. If the email address has changed, triggers a verification email
+ * challenge via `changeEmail` requiring the user to verify the new address before the update takes effect.
+ *
+ * @param props - Component props containing initial user profile values
+ * @returns Profile editing form with validation and submission states
+ * @author Maruf Bepary
  */
 export function ProfileUpdateForm({
   user,
@@ -48,8 +57,12 @@ export function ProfileUpdateForm({
   const { isSubmitting } = form.formState;
 
   /**
-   * Updates profile fields and optionally initiates an email change flow.
-   * @param data Form submission containing updated profile values.
+   * Submits profile changes to Better Auth, coordinating user metadata updates and email transitions.
+   * Compares the submitted email against the current email, conditionally firing `changeEmail` with a
+   * verification callback URL alongside `updateUser`. Displays contextual notifications and refreshes the route.
+   *
+   * @param data - Validated form values containing name, email, and custom attributes
+   * @author Maruf Bepary
    */
   async function handleProfileUpdate(data: ProfileUpdateFormData) {
     const updateUserPayload: UpdateUserPayload = {

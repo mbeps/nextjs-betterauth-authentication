@@ -7,8 +7,14 @@ import { ROUTES } from "@/config/routes";
 import { authClient } from "@/lib/auth/auth-client";
 
 /**
- * Renders a floating button that lets admins stop impersonation sessions.
- * @returns UI fragment that is only visible while impersonating another user.
+ * Fixed overlay indicator and control button displayed during an active admin impersonation session.
+ * Inspects the current client session for `impersonatedBy` metadata; when present, displays a prominent
+ * floating destructive action button at the bottom-left corner of the viewport. Clicking the button stops
+ * impersonation via the Better Auth admin client, refreshes session data, and redirects the administrator back
+ * to the admin dashboard (`ROUTES.ADMIN`).
+ *
+ * @returns Floating UI button if impersonation is active, or null if the session is standard/unimpersonated
+ * @author Maruf Bepary
  */
 export function ImpersonationIndicator() {
   const router = useRouter();

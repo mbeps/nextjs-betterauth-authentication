@@ -22,8 +22,14 @@ import {
 } from "@/schemas/auth/change-password.schema";
 
 /**
- * Form that lets users update credentials and optionally revoke other sessions.
- * @returns Controlled password change form component.
+ * Interactive form component for rotating user account passwords.
+ * Implements React Hook Form with Zod validation (`changePasswordSchema`) to ensure password complexity.
+ * Supports cascading session revocation via the `revokeOtherSessions` flag, allowing users to terminate
+ * all other active sessions across browsers and devices immediately upon updating their password credentials.
+ * Dispatches mutations via Better Auth's `changePassword` client method.
+ *
+ * @returns Password update form with current password verification and session revocation toggle
+ * @author Maruf Bepary
  */
 export function ChangePasswordForm() {
   const form = useForm<ChangePasswordFormData>({
@@ -38,8 +44,12 @@ export function ChangePasswordForm() {
   const { isSubmitting } = form.formState;
 
   /**
-   * Submits a Better Auth password change request.
-   * @param data Form payload containing the current and new password.
+   * Submits the password update request to Better Auth.
+   * On failure, surfaces the error message via Sonner toast; on success, notifies the user
+   * and clears sensitive password fields from form state.
+   *
+   * @param data - Validated form payload containing current password, new password, and revocation flag
+   * @author Maruf Bepary
    */
   async function handlePasswordChange(data: ChangePasswordFormData) {
     await authClient.changePassword(data, {

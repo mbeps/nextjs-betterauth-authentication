@@ -30,10 +30,25 @@ import { authClient } from "@/lib/auth/auth-client";
 import { GLOBAL_ROLES } from "@/lib/auth/roles";
 
 /**
- * Row renderer for the admin users table with impersonation and moderation actions.
- * @param user User record augmented with role metadata.
- * @param selfId Identifier for the currently authenticated admin.
- * @returns Table row containing user details and management controls.
+ * Interactive table row component rendering user details and administrative moderation controls.
+ * Executes as a Client Component ("use client") integrating with Better Auth admin client APIs
+ * and Sonner notification toasts.
+ *
+ * Security Context & Permissions:
+ * - Employs a self-guard check (`isSelf = user.id === selfId`) to prevent the authenticated administrator
+ *   from impersonating, banning, revoking sessions for, or deleting their own active account.
+ * - Actions trigger client-side mutations against the Better Auth Admin API (`authClient.admin.*`),
+ *   which are validated against session credentials and server-side RBAC rules.
+ *
+ * Moderation Features:
+ * - User impersonation with session refetch and redirection to the application home view.
+ * - Targeted session revocation across all active devices for a compromised account.
+ * - Toggling account ban status with instant feedback.
+ * - Irreversible account deletion guarded by a modal confirmation dialog (`AlertDialog`).
+ *
+ * @param props - Component properties containing user data and the active admin identifier
+ * @returns Table row rendering account status badges, role indicator, and actions menu
+ * @author Maruf Bepary
  */
 export function UserRow({
   user,
@@ -48,8 +63,12 @@ export function UserRow({
 
   // Admin action handlers.
   /**
-   * Starts impersonating another user and redirects back home.
-   * @param userId Identifier for the user being impersonated.
+   * Initiates an administrative impersonation session for the specified target user.
+   * On success, refetches the active session state so client hooks reflect the impersonated identity
+   * and navigates to the home route.
+   *
+   * @param userId - Unique identifier of the user to impersonate
+   * @author Maruf Bepary
    */
   function handleImpersonateUser(userId: string) {
     authClient.admin.impersonateUser(
@@ -67,8 +86,11 @@ export function UserRow({
   }
 
   /**
-   * Bans a user and refreshes the admin list on success.
-   * @param userId Identifier for the account being banned.
+   * Suspends access for a target user by applying a ban through the admin API.
+   * Dispatches a toast notification and refreshes the server component data upon success.
+   *
+   * @param userId - Unique identifier of the user account to ban
+   * @author Maruf Bepary
    */
   function handleBanUser(userId: string) {
     authClient.admin.banUser(
@@ -86,8 +108,11 @@ export function UserRow({
   }
 
   /**
-   * Removes an active ban from the selected user.
-   * @param userId Identifier for the account being unbanned.
+   * Reinstates an account by removing an active ban via the admin API.
+   * Dispatches a toast notification and triggers a route refresh on success.
+   *
+   * @param userId - Unique identifier of the banned user account to restore
+   * @author Maruf Bepary
    */
   function handleUnbanUser(userId: string) {
     authClient.admin.unbanUser(
@@ -105,8 +130,11 @@ export function UserRow({
   }
 
   /**
-   * Revokes all sessions for a user via the admin API.
-   * @param userId Identifier for the account whose sessions are revoked.
+   * Invalidates all active session tokens associated with the specified user account.
+   * Forces the target user to re-authenticate on all connected devices.
+   *
+   * @param userId - Unique identifier of the user whose sessions will be invalidated
+   * @author Maruf Bepary
    */
   function handleRevokeSessions(userId: string) {
     authClient.admin.revokeUserSessions(
@@ -123,8 +151,11 @@ export function UserRow({
   }
 
   /**
-   * Permanently deletes a user after confirmation.
-   * @param userId Identifier for the account being deleted.
+   * Permanently deletes a user account and associated credentials from the database.
+   * Invoked only after explicit user confirmation in the alert dialog.
+   *
+   * @param userId - Unique identifier of the user account to permanently remove
+   * @author Maruf Bepary
    */
   function handleRemoveUser(userId: string) {
     authClient.admin.removeUser(

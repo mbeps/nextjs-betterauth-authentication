@@ -10,10 +10,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { authClient } from "@/lib/auth/auth-client";
 
 /**
- * Displays the current session and allows revoking other active sessions.
- * @param sessions List of sessions returned by Better Auth.
- * @param currentSessionToken Token for the session currently in use.
- * @returns Session management interface with revoke controls.
+ * Interactive session management interface displaying current and remote device sessions.
+ * Categorizes active sessions by comparing token identifiers against the active session token.
+ * Renders parsed device metadata for the active browser session, alongside a list of remote sessions
+ * with individual and bulk revocation controls to safeguard accounts against unauthorized access.
+ *
+ * @param props - Component props containing user sessions and the active session token
+ * @returns Session management dashboard with single and bulk revocation controls
+ * @author Maruf Bepary
  */
 export function SessionManagement({
   sessions,
@@ -28,8 +32,12 @@ export function SessionManagement({
   const currentSession = sessions.find((s) => s.token === currentSessionToken);
 
   /**
-   * Revokes every session except the current one.
-   * @returns Promise that resolves when sessions are revoked.
+   * Revokes all active sessions across devices except the current session.
+   * Dispatches Better Auth's `revokeOtherSessions` API, terminating remote sessions
+   * and triggering a router refresh to update active session lists.
+   *
+   * @returns Promise resolving when remote sessions have been revoked
+   * @author Maruf Bepary
    */
   function revokeOtherSessions() {
     return authClient.revokeOtherSessions(undefined, {
@@ -78,10 +86,14 @@ export function SessionManagement({
 }
 
 /**
- * Renders an individual session card with browser metadata and revoke actions.
- * @param session Session being displayed.
- * @param isCurrentSession Whether the session matches the active token.
- * @returns Card element describing a session.
+ * Visual card displaying individual session metadata, client device characteristics, and revocation actions.
+ * Parses the session's user agent string using `ua-parser-js` to extract browser and operating system details,
+ * dynamically selecting device icons (mobile vs. desktop). Renders creation and expiration timestamps,
+ * badges the active browser session, and provides single-session revocation buttons for remote sessions.
+ *
+ * @param props - Component props containing the session object and current session indicator
+ * @returns Session card displaying parsed device details and revocation controls
+ * @author Maruf Bepary
  */
 function SessionCard({
   session,
@@ -94,8 +106,11 @@ function SessionCard({
   const userAgentInfo = session.userAgent ? UAParser(session.userAgent) : null;
 
   /**
-   * Formats a human-readable browser and OS label from the user agent.
-   * @returns Browser information string suitable for display.
+   * Generates a descriptive device string from parsed user-agent data.
+   * Combines browser and operating system labels, or falls back to "Unknown Device".
+   *
+   * @returns Human-readable device description string
+   * @author Maruf Bepary
    */
   function getBrowserInformation() {
     if (userAgentInfo == null) return "Unknown Device";
@@ -110,9 +125,11 @@ function SessionCard({
   }
 
   /**
-   * Formats a date with medium detail for timestamps.
-   * @param date Date instance to format.
-   * @returns Localized string representation of the date.
+   * Formats a session timestamp into a localized medium date and short time string.
+   *
+   * @param date - Date object or ISO timestamp string to format
+   * @returns Localized date and time string
+   * @author Maruf Bepary
    */
   function formatDate(date: Date) {
     return new Intl.DateTimeFormat(undefined, {
@@ -122,8 +139,11 @@ function SessionCard({
   }
 
   /**
-   * Revokes a specific session token via Better Auth.
-   * @returns Promise that resolves when the session is revoked.
+   * Terminates this specific session token via Better Auth.
+   * Invokes `authClient.revokeSession` with the target session token, invalidating its cookie/token on the server.
+   *
+   * @returns Promise resolving upon session revocation
+   * @author Maruf Bepary
    */
   function revokeSession() {
     return authClient.revokeSession(

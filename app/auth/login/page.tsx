@@ -19,6 +19,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ROUTES } from "@/config/routes";
 import { authClient } from "@/lib/auth/auth-client";
 
+/**
+ * Tab identifier constants representing the available authentication views.
+ */
 const TAB_VALUES = {
   SIGN_IN: "signin",
   SIGN_UP: "signup",
@@ -26,11 +29,27 @@ const TAB_VALUES = {
   FORGOT_PASSWORD: "forgot-password",
 } as const;
 
+/**
+ * Union type representing active tab values within the authentication portal.
+ */
 type Tab = (typeof TAB_VALUES)[keyof typeof TAB_VALUES];
 
 /**
- * Auth entry point that combines sign-in, sign-up, verification, and reset flows.
- * @returns Client-rendered login page with tabbed navigation.
+ * Centralized client-side authentication portal coordinating user access flows.
+ * Executes as a Client Component ("use client") managing tabbed navigation across sign-in,
+ * registration, email verification, and password recovery workflows.
+ *
+ * User Flows & Security Context:
+ * - Session Guard: On component mount, probes the current session via `authClient.getSession()`.
+ *   If an authenticated session is already active, the user is proactively redirected to `ROUTES.HOME`.
+ * - Credentials & Passkeys: Hosts the `SignInTab` for email/password and WebAuthn passkey authentication,
+ *   as well as `SignUpTab` for new user registration.
+ * - Social Authentication: Mounts `SocialAuthButtons` across credentials tabs for OAuth federated sign-in.
+ * - Verification & Recovery: Intercepts unverified email states or forgotten passwords, transitioning
+ *   the interface dynamically into `EmailVerification` or `ForgotPassword` views.
+ *
+ * @returns Client-rendered authentication portal with responsive tabbed cards
+ * @author Maruf Bepary
  */
 export default function LoginPage() {
   const router = useRouter();
@@ -45,8 +64,10 @@ export default function LoginPage() {
   }, [router]);
 
   /**
-   * Switches to the email verification tab and stores the target email.
-   * @param email Address that needs verification.
+   * Transitions the active portal view to the email verification screen for a specific address.
+   *
+   * @param email - Target email address requiring verification
+   * @author Maruf Bepary
    */
   function openEmailVerificationTab(email: string) {
     setEmail(email);
