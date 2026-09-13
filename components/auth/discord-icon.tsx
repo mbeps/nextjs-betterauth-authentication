@@ -1,9 +1,14 @@
 import type { ComponentProps } from "react";
 
 /**
- * Discord logo rendered with the shared icon sizing.
- * @param props SVG props forwarded to the element.
- * @returns Discord brand icon.
+ * Discord brand logo SVG icon component for OAuth buttons and social logins.
+ * Renders an inline SVG vector of the Discord emblem styled with standard compact dimensions (`size-4`)
+ * and `fill="currentColor"` to inherit parent typography or theme colors.
+ * Accessible props such as `aria-label` or `aria-hidden` can be passed via forwarded SVG props.
+ *
+ * @param props - Standard SVG attributes forwarded to the underlying `<svg>` element
+ * @returns An SVG element displaying the Discord logo
+ * @author Maruf Bepary
  */
 export function DiscordIcon(props: ComponentProps<"svg">) {
   return (

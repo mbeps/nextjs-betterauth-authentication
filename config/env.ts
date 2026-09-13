@@ -1,9 +1,25 @@
 import { z } from "zod";
 
+/**
+ * Validation schema for client-accessible environment variables.
+ * Enforces schema constraints on public client-side variables prefixed with NEXT_PUBLIC_.
+ * Use this schema to safely validate configuration exposed to the browser.
+ *
+ * @see serverEnvSchema for server-only environment variables
+ * @author Maruf Bepary
+ */
 export const clientEnvSchema = z.object({
   // Define client-side (NEXT_PUBLIC_*) variables here if needed
 });
 
+/**
+ * Validation schema for server-only environment variables.
+ * Enforces strict constraints on database credentials, authentication secrets, OAuth credentials, and third-party APIs.
+ * Prevents application startup if critical secrets or configuration keys are missing or malformed.
+ *
+ * @see clientEnvSchema for browser-facing variables
+ * @author Maruf Bepary
+ */
 export const serverEnvSchema = clientEnvSchema.extend({
   NODE_ENV: z
     .enum(["development", "test", "production"])
@@ -22,13 +38,43 @@ export const serverEnvSchema = clientEnvSchema.extend({
   ARCJET_API_KEY: z.string().optional(),
 });
 
+/**
+ * Inferred type representing validated client-side environment variables.
+ *
+ * @see clientEnvSchema
+ * @author Maruf Bepary
+ */
 export type ClientEnv = z.infer<typeof clientEnvSchema>;
+
+/**
+ * Inferred type representing validated server-side environment variables.
+ *
+ * @see serverEnvSchema
+ * @author Maruf Bepary
+ */
 export type ServerEnv = z.infer<typeof serverEnvSchema>;
+
+/**
+ * Unified application environment variable type definition.
+ * Serves as the primary type interface for application configuration access.
+ *
+ * @see ServerEnv
+ * @author Maruf Bepary
+ */
 export type Env = ServerEnv;
 
 /**
- * Validates environment variables according to active runtime context.
- * Pass explicit process.env keys so Next.js bundlers can inline NEXT_PUBLIC_* variables.
+ * Validates environment variables according to the active runtime context.
+ * Differentiates between client and server execution environments and runs validation
+ * against Zod schemas. Pass explicit process.env keys so Next.js bundlers can inline variables.
+ *
+ * @param runtimeEnv - Key-value map of runtime environment variables to validate
+ * @param isServerEnv - Flag indicating whether validation is running in a server context
+ * @returns Fully validated and typed environment configuration object
+ * @throws {Error} When required environment variables are missing or fail schema validation
+ * @see serverEnvSchema
+ * @see clientEnvSchema
+ * @author Maruf Bepary
  */
 export function validateEnv(
   runtimeEnv: Record<string, unknown> = {
@@ -64,4 +110,12 @@ export function validateEnv(
   return parsed.data as unknown as Env;
 }
 
+/**
+ * Singleton validated environment configuration object.
+ * Provides type-safe access to application secrets and configuration across the server runtime.
+ * Evaluated at module load time to fail fast if required environment variables are absent.
+ *
+ * @see validateEnv
+ * @author Maruf Bepary
+ */
 export const env = validateEnv();

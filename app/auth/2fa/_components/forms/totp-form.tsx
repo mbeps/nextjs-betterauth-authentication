@@ -23,8 +23,19 @@ import {
 } from "@/schemas/two-factor/totp.schema";
 
 /**
- * Form that accepts a 6-digit TOTP code during the two-factor challenge.
- * @returns TOTP verification form component.
+ * Client form component for completing a two-factor challenge using a time-based one-time password (TOTP).
+ * Executes as a Client Component ("use client") utilizing React Hook Form, Zod schema validation,
+ * and the Better Auth two-factor client extension.
+ *
+ * Security Context & Flow:
+ * - Prompts the user for their 6-digit authenticator code (Google Authenticator, Authy, 1Password).
+ * - Enforces schema validation using `totpSchema` before dispatching the verification request.
+ * - Invokes `authClient.twoFactor.verifyTotp` against the Better Auth two-factor challenge endpoint.
+ * - On successful verification, the server issues a fully authenticated session cookie, and
+ *   the client routes the user to `ROUTES.HOME`.
+ *
+ * @returns Client-rendered TOTP challenge verification form with input field and submit button
+ * @author Maruf Bepary
  */
 export function TotpForm() {
   const router = useRouter();
@@ -38,8 +49,10 @@ export function TotpForm() {
   const { isSubmitting } = form.formState;
 
   /**
-   * Verifies the provided TOTP code and redirects to the home page on success.
-   * @param data Form payload containing the 6-digit code.
+   * Submits the 6-digit TOTP challenge code to Better Auth and navigates upon success.
+   *
+   * @param data - Validated form payload containing the 6-digit authenticator code
+   * @author Maruf Bepary
    */
   async function handleTotpVerification(data: TotpFormData) {
     await authClient.twoFactor.verifyTotp(data, {

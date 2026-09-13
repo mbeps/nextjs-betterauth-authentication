@@ -14,13 +14,21 @@ import {
 } from "@/components/ui/card";
 import { auth } from "@/lib/auth/auth";
 
+/**
+ * Inferred account representation for user authentication providers.
+ */
 type Account = Awaited<ReturnType<typeof auth.api.listUserAccounts>>[number];
 
 /**
- * Server component that aggregates password, 2FA, and passkey management data.
- * @param email Email address used for password setup flows.
- * @param isTwoFactorEnabled Current two-factor state for the user.
- * @returns Stacked security cards for password, 2FA, and passkeys.
+ * Server-rendered security center coordinating password lifecycle, two-factor authentication, and WebAuthn passkeys.
+ * Concurrently queries registered passkeys and linked accounts on the server to determine credential capabilities.
+ * Dynamically branches authentication controls: accounts with existing password credentials receive change-password
+ * and TOTP two-factor authentication controls, whereas OAuth-only accounts are presented with a set-password flow.
+ * Also renders biometric and hardware security key management via WebAuthn passkeys.
+ *
+ * @param props - Component properties containing user email and two-factor status
+ * @returns Stacked security cards for credential, 2FA, and passkey management
+ * @author Maruf Bepary
  */
 export async function SecurityTab({
   email,

@@ -8,8 +8,20 @@ import { ROUTES } from "@/config/routes";
 import { authClient } from "@/lib/auth/auth-client";
 
 /**
- * Landing page that surfaces navigation options based on session state.
- * @returns Client-rendered home page component.
+ * Interactive application landing page showcasing navigation options based on authentication state.
+ * Runs as a Client Component ("use client") leveraging Better Auth client-side session management hooks
+ * and administrative role checks.
+ *
+ * User Flows & Security Context:
+ * - Unauthenticated visitors see a welcome banner with a call-to-action to navigate to the authentication portal (`/auth/login`).
+ * - Authenticated users see a personalized greeting displaying their display name (`session.user.name`) alongside quick links
+ *   to user profile management (`/profile`) and organization workspaces (`/organizations`).
+ * - For authenticated users, an asynchronous permission probe checks for `user:list` capabilities via `authClient.admin.hasPermission`.
+ *   When granted, a dedicated navigation link to the administrative console (`/admin`) is conditionally revealed.
+ * - Provides a one-click session termination button leveraging `BetterAuthActionButton` to trigger `authClient.signOut()`.
+ *
+ * @returns Client-rendered home landing page component with conditional authentication views
+ * @author Maruf Bepary
  */
 export default function Home() {
   const [hasAdminPermission, setHasAdminPermission] = useState(false);

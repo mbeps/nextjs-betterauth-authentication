@@ -9,8 +9,21 @@ import {
 } from "@/lib/auth/o-auth-providers";
 
 /**
- * Renders buttons for each configured OAuth provider.
- * @returns Array of Better Auth action buttons for social sign-in.
+ * Renders interactive social login buttons for all supported third-party OAuth identity providers.
+ * Executes as a Client Component ("use client") iterating over registered providers to establish
+ * federated authentication sessions via Better Auth.
+ *
+ * Security Context & OAuth Flow:
+ * - Maps over `SUPPORTED_OAUTH_PROVIDERS` and binds each to `authClient.signIn.social`.
+ * - Initiates the OAuth 2.0 / OIDC handshake redirecting the browser to the respective provider's
+ *   authorization endpoint (e.g. GitHub, Google, Discord).
+ * - Specifies `ROUTES.HOME` as the post-authentication callback URL once the provider redirects back
+ *   and Better Auth sets the session cookie.
+ * - Displays provider-specific icons and accessible branded labels wrapped in `BetterAuthActionButton`
+ *   to handle loading spinners and error feedback gracefully.
+ *
+ * @returns Array of reactive OAuth authentication action buttons
+ * @author Maruf Bepary
  */
 export function SocialAuthButtons() {
   return SUPPORTED_OAUTH_PROVIDERS.map((provider) => {

@@ -9,8 +9,13 @@ import { ROUTES } from "@/config/routes";
 import { auth } from "@/lib/auth/auth";
 
 /**
- * Organizations dashboard where members switch, create, and manage teams.
- * @returns Server-rendered organizations page.
+ * Server-rendered dashboard page for managing organizations and team memberships.
+ * Requires an authenticated user session, redirecting unauthenticated visitors to the login route.
+ * Provides entry points for switching active organizations, creating new workspaces, and inspecting
+ * team members and pending invitations through reactive client components.
+ *
+ * @returns Server-rendered organizations management dashboard
+ * @author Maruf Bepary
  */
 export default async function OrganizationsPage() {
   const session = await auth.api.getSession({ headers: await headers() });

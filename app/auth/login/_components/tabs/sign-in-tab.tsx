@@ -22,10 +22,21 @@ import { authClient } from "@/lib/auth/auth-client";
 import { type SignInForm, signInSchema } from "@/schemas/auth/sign-in.schema";
 
 /**
- * Email and password sign-in form with passkey shortcut and password reset link.
- * @param openEmailVerificationTab Callback that opens the verification tab when required.
- * @param openForgotPassword Callback that opens the password reset tab.
- * @returns Sign-in form component.
+ * Interactive email and password sign-in form tab component.
+ * Executes as a Client Component ("use client") utilizing React Hook Form, Zod validation,
+ * and Better Auth client authentication APIs.
+ *
+ * Security Context & Authentication Flows:
+ * - Credentials Sign-In: Submits email and password pairs via `authClient.signIn.email`.
+ * - Email Verification Gate: Detects the `EMAIL_NOT_VERIFIED` error code returned by Better Auth,
+ *   automatically redirecting the user to the email verification screen via `openEmailVerificationTab`.
+ * - Passkey Integration: Integrates autofill metadata (`webauthn`) in input fields and embeds
+ *   the `PasskeyButton` for passwordless WebAuthn / FIDO2 authentication.
+ * - Recovery Navigation: Exposes a trigger to switch tabs into the password recovery workflow (`openForgotPassword`).
+ *
+ * @param props - Component properties containing navigation callbacks for email verification and password reset
+ * @returns Client-rendered sign-in form containing input fields, validation feedback, and passkey options
+ * @author Maruf Bepary
  */
 export function SignInTab({
   openEmailVerificationTab,
@@ -46,8 +57,11 @@ export function SignInTab({
   const { isSubmitting } = form.formState;
 
   /**
-   * Attempts to authenticate with email and password and handles verification errors.
-   * @param data Form submission payload containing credentials.
+   * Submits user credentials to Better Auth and navigates upon successful authentication.
+   * If an unverified email error code is encountered, transitions to the verification tab.
+   *
+   * @param data - Validated sign-in form submission values including email and password
+   * @author Maruf Bepary
    */
   async function handleSignIn(data: SignInForm) {
     await authClient.signIn.email(

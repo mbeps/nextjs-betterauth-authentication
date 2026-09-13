@@ -11,8 +11,13 @@ import {
 import { authClient } from "@/lib/auth/auth-client";
 
 /**
- * Dropdown that switches the active organization for the current session.
- * @returns Select input populated with organizations the user belongs to.
+ * Interactive dropdown selector that switches the active organization context for the session.
+ * Retrieves all organizations the authenticated user belongs to via `useListOrganizations` and
+ * syncs the selected value with `useActiveOrganization`. When changed, it updates the active
+ * organization session state so all subsequent organization-scoped requests target the chosen workspace.
+ *
+ * @returns Select dropdown component, or null if the user has no organization memberships
+ * @author Maruf Bepary
  */
 export function OrganizationSelect() {
   const { data: activeOrganization } = authClient.useActiveOrganization();
@@ -23,8 +28,12 @@ export function OrganizationSelect() {
   }
 
   /**
-   * Activates an organization to scope subsequent API calls.
-   * @param organizationId Organization identifier stored in Better Auth.
+   * Updates the active organization in session state via Better Auth.
+   * Dispatches `organization.setActive` to update session cookies and reactive context,
+   * triggering UI updates across tabs and displaying a toast notification if the switch fails.
+   *
+   * @param organizationId - Identifier of the organization to set as active
+   * @author Maruf Bepary
    */
   function setActiveOrganization(organizationId: string) {
     authClient.organization.setActive(

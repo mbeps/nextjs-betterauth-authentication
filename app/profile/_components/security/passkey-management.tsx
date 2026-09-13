@@ -40,9 +40,14 @@ import {
 } from "@/schemas/two-factor/passkey.schema";
 
 /**
- * Displays existing passkeys and provides controls for creating or deleting them.
- * @param passkeys List of registered passkeys for the current user.
- * @returns Passkey management interface with modal creation flow.
+ * Interactive management panel for WebAuthn passkeys and FIDO2 credentials.
+ * Displays registered biometric and hardware security keys with creation dates and revocation controls.
+ * Provides a modal dialog workflow initiating browser WebAuthn registration ceremonies via Better Auth's
+ * passkey plugin (`addPasskey`), allowing users to enroll authenticators (e.g. Touch ID, Face ID, Windows Hello, YubiKey).
+ *
+ * @param props - Component props containing the list of registered passkey credentials
+ * @returns Passkey list view and modal registration dialog
+ * @author Maruf Bepary
  */
 export function PasskeyManagement({ passkeys }: { passkeys: Passkey[] }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -57,8 +62,12 @@ export function PasskeyManagement({ passkeys }: { passkeys: Passkey[] }) {
   const { isSubmitting } = form.formState;
 
   /**
-   * Creates a new WebAuthn passkey using Better Auth's passkey plugin.
-   * @param data Form payload containing the passkey label.
+   * Enrolls a new WebAuthn passkey by triggering the browser credential creation ceremony.
+   * Dispatches Better Auth's `passkey.addPasskey` method, which communicates with browser WebAuthn APIs
+   * to generate a public/private keypair. On success, dismisses the dialog and refreshes server state.
+   *
+   * @param data - Form data containing the user-specified friendly label for the passkey
+   * @author Maruf Bepary
    */
   async function handleAddPasskey(data: PasskeyForm) {
     await authClient.passkey.addPasskey(data, {
@@ -72,9 +81,13 @@ export function PasskeyManagement({ passkeys }: { passkeys: Passkey[] }) {
     });
   }
   /**
-   * Removes an existing passkey and refreshes the passkey list.
-   * @param passkeyId Identifier for the passkey being removed.
-   * @returns Promise that resolves upon successful deletion.
+   * Revokes and deletes a registered WebAuthn passkey credential.
+   * Calls Better Auth's `passkey.deletePasskey` endpoint to remove the public key from the database
+   * and refreshes the active route.
+   *
+   * @param passkeyId - Unique identifier of the passkey credential to delete
+   * @returns Promise resolving upon credential deletion
+   * @author Maruf Bepary
    */
   function handleDeletePasskey(passkeyId: string) {
     return authClient.passkey.deletePasskey(

@@ -7,14 +7,29 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ROUTES } from "@/config/routes";
 import { auth } from "@/lib/auth/auth";
 
+/**
+ * Tab identifier constants for switching between 2FA challenge methods.
+ */
 const TAB_VALUES = {
   TOTP: "totp",
   BACKUP: "backup",
 } as const;
 
 /**
- * Interstitial page that verifies users during two-factor authentication challenges.
- * @returns Two-factor challenge page with TOTP and backup code tabs.
+ * Server-rendered two-factor authentication challenge page.
+ * Executes as a React Server Component (RSC) to verify session state before rendering
+ * interactive client challenge forms for TOTP authenticators and emergency backup codes.
+ *
+ * Security Context & Authentication Flow:
+ * - Session Inspection: Evaluates incoming request headers using `auth.api.getSession`.
+ *   If a fully established authenticated session already exists, the visitor is redirected to `ROUTES.HOME`.
+ * - 2FA Challenge State: When a user with 2FA enabled provides valid primary credentials (password/social),
+ *   Better Auth issues a temporary challenge cookie rather than a full session token.
+ * - Challenge Resolution: Renders tabbed access to `TotpForm` (for 6-digit TOTP app codes)
+ *   and `BackupCodeTab` (for single-use emergency recovery codes) to upgrade the challenge into a full session.
+ *
+ * @returns Server-rendered 2FA challenge container with TOTP and backup code tabs
+ * @author Maruf Bepary
  */
 export default async function TwoFactorPage() {
   const session = await auth.api.getSession({ headers: await headers() });

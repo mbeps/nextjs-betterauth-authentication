@@ -8,7 +8,14 @@ import {
 import { INVITATION_STATUS, ORG_ROLES } from "@/lib/auth/roles";
 
 /**
- * Stores end-user identities and custom profile fields.
+ * Database table storing core user identities, authentication states, and custom profile attributes.
+ * Represents the central identity entity managed by Better Auth, augmented with admin plugin fields
+ * (role, ban status, ban expiration) and two-factor enablement flags, alongside application-specific
+ * fields such as favoriteNumber.
+ * Enforces email uniqueness and serves as the primary key reference for cascading deletions across
+ * sessions, accounts, credentials, and memberships.
+ *
+ * @author Maruf Bepary
  */
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -30,7 +37,12 @@ export const user = pgTable("user", {
 });
 
 /**
- * Tracks active user sessions along with device metadata.
+ * Database table tracking active user sessions and device telemetry.
+ * Managed by Better Auth session management lifecycle, supporting multi-device login,
+ * admin impersonation tracking (impersonatedBy), and organization tenant context (activeOrganizationId).
+ * References the user table with cascading deletion on user removal, and enforces unique session tokens.
+ *
+ * @author Maruf Bepary
  */
 export const session = pgTable("session", {
   id: text("id").primaryKey(),
@@ -50,7 +62,13 @@ export const session = pgTable("session", {
 });
 
 /**
- * Persists OAuth account connections and credential-based secrets.
+ * Database table storing external OAuth provider credentials and local password hashes.
+ * Managed by Better Auth core authentication to link third-party identity providers (e.g., GitHub, Google)
+ * and credential-based accounts to a single user identity. Holds encrypted provider access tokens,
+ * refresh tokens, expiration timestamps, and password hashes.
+ * References the user table with cascading deletion to prune authentication secrets when a user is deleted.
+ *
+ * @author Maruf Bepary
  */
 export const account = pgTable("account", {
   id: text("id").primaryKey(),
@@ -73,7 +91,13 @@ export const account = pgTable("account", {
 });
 
 /**
- * Contains email verifications, password resets, and other one-time tokens.
+ * Database table storing temporary one-time verification tokens and challenge nonces.
+ * Managed by Better Auth for critical asynchronous verification flows including email verification,
+ * password reset requests, and change-email confirmations.
+ * Identified by an arbitrary identifier (such as an email address) paired with a hashed or random value
+ * and strict expiration timestamp.
+ *
+ * @author Maruf Bepary
  */
 export const verification = pgTable("verification", {
   id: text("id").primaryKey(),
@@ -88,7 +112,13 @@ export const verification = pgTable("verification", {
 });
 
 /**
- * Holds shared secrets and backup codes for TOTP-based 2FA.
+ * Database table storing two-factor authentication (2FA) secrets, backup codes, and lockout counters.
+ * Backed by the Better Auth Two-Factor plugin to support Time-based One-Time Password (TOTP) workflows.
+ * Stores base32-encoded shared secrets, encrypted/hashed backup codes, failed attempt counts, and lockout timestamps
+ * to guard against brute-force attacks.
+ * References the user table with cascading deletion when a user is removed.
+ *
+ * @author Maruf Bepary
  */
 export const twoFactor = pgTable("two_factor", {
   id: text("id").primaryKey(),
@@ -103,7 +133,12 @@ export const twoFactor = pgTable("two_factor", {
 });
 
 /**
- * Stores WebAuthn passkey material for passwordless login.
+ * Database table storing FIDO2 / WebAuthn public key credentials for passwordless and multi-factor authentication.
+ * Backed by the Better Auth Passkey plugin to manage WebAuthn credentials, attestation metadata (AAGUID),
+ * public keys, credential IDs, sign count counters (to detect cloned authenticators), and backup flags.
+ * References the user table with cascading deletion when a user account is deleted.
+ *
+ * @author Maruf Bepary
  */
 export const passkey = pgTable("passkey", {
   id: text("id").primaryKey(),
@@ -122,7 +157,12 @@ export const passkey = pgTable("passkey", {
 });
 
 /**
- * Defines collaborative organizations created via the Better Auth plugin.
+ * Database table defining multi-tenant organizations and workspaces.
+ * Backed by the Better Auth Organization plugin to enable multi-tenant collaboration, team workspaces,
+ * slug-based routing, and custom organization metadata.
+ * Serves as the top-level boundary for member role associations and team invitations.
+ *
+ * @author Maruf Bepary
  */
 export const organization = pgTable("organization", {
   id: text("id").primaryKey(),
@@ -134,7 +174,12 @@ export const organization = pgTable("organization", {
 });
 
 /**
- * Links users to organizations with role-based access metadata.
+ * Database table mapping users to organizations with assigned role permissions.
+ * Backed by the Better Auth Organization plugin to manage organizational membership and Role-Based Access Control (RBAC).
+ * Supports default roles (e.g. member, admin, owner) to govern tenant resource access.
+ * Maintains referential integrity with cascading deletion on both user and organization removal.
+ *
+ * @author Maruf Bepary
  */
 export const member = pgTable("member", {
   id: text("id").primaryKey(),
@@ -149,7 +194,12 @@ export const member = pgTable("member", {
 });
 
 /**
- * Tracks pending invitations sent to prospective organization members.
+ * Database table tracking pending and processed invitations to join an organization.
+ * Backed by the Better Auth Organization plugin to manage invite lifecycles sent via email with expiration limits.
+ * Tracks target email, assigned organization role, invitation status (pending, accepted, rejected, canceled),
+ * and links to the inviting user and target organization with cascading deletion.
+ *
+ * @author Maruf Bepary
  */
 export const invitation = pgTable("invitation", {
   id: text("id").primaryKey(),

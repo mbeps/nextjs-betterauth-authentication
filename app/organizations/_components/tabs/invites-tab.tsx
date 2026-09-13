@@ -15,8 +15,13 @@ import { authClient } from "@/lib/auth/auth-client";
 import { INVITATION_STATUS } from "@/lib/auth/roles";
 
 /**
- * Shows pending invitations and allows cancellation or new invites.
- * @returns Invitations tab populated from the active organization hook.
+ * Tab panel managing pending invitations for the active organization.
+ * Filters active organization invitations to show only outstanding invitations (`INVITATION_STATUS.PENDING`),
+ * displays recipient emails, proposed roles, and expiration dates, and provides actions to revoke invitations
+ * or spawn the dialog to invite new members.
+ *
+ * @returns Invitations management view with pending invite list and creation trigger
+ * @author Maruf Bepary
  */
 export function InvitesTab() {
   const { data: activeOrganization } = authClient.useActiveOrganization();
@@ -25,9 +30,13 @@ export function InvitesTab() {
   );
 
   /**
-   * Cancels an outstanding organization invitation.
-   * @param invitationId Identifier for the invite being revoked.
-   * @returns Promise for the cancel request.
+   * Revokes an outstanding organization invitation before it is accepted or expired.
+   * Calls Better Auth's `organization.cancelInvitation` endpoint, invalidating the invitation token
+   * and reactively removing the invite from the active organization's pending list.
+   *
+   * @param invitationId - Unique identifier of the invitation to cancel
+   * @returns Promise resolving when the invitation has been cancelled
+   * @author Maruf Bepary
    */
   function cancelInvitation(invitationId: string) {
     return authClient.organization.cancelInvitation({ invitationId });

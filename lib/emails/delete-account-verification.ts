@@ -1,17 +1,34 @@
 import { sendEmail } from "@/lib/emails/send-email";
 
+/**
+ * Payload parameters required to dispatch an account deletion confirmation email.
+ *
+ * @author Maruf Bepary
+ */
 interface EmailVerificationData {
+  /** Target account owner details. */
   user: {
+    /** Display name of the user requesting account deletion. */
     name: string;
+    /** Destination email address of the account owner. */
     email: string;
   };
+  /** Secure confirmation link containing Better Auth deletion validation token. */
   url: string;
 }
 
 /**
- * Sends the confirmation message that guards permanent account deletion.
- * @param user Account owner information.
- * @param url Verification link allowing the user to approve deletion.
+ * Sends the confirmation email that guards permanent user account deletion.
+ * Invoked by Better Auth's user deletion lifecycle hook when a user requests to delete their profile.
+ * Ensures intentionality and security by requiring email authorization before irreversibly purging user data.
+ *
+ * @param data - Payload containing account owner details and deletion confirmation callback URL
+ * @param data.user - Account owner recipient details
+ * @param data.url - One-time verification link permitting approval of account deletion
+ * @returns Promise resolving upon successful message transmission
+ * @throws {Error} When Postmark fails to deliver the verification email
+ * @see sendEmail for the underlying Postmark email delivery mechanism
+ * @author Maruf Bepary
  */
 export async function sendDeleteAccountVerificationEmail({
   user,

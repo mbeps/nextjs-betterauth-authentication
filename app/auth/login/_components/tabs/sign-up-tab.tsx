@@ -21,9 +21,20 @@ import { authClient } from "@/lib/auth/auth-client";
 import { type SignUpForm, signUpSchema } from "@/schemas/auth/sign-up.schema";
 
 /**
- * Sign-up form that captures user info and triggers Better Auth registration.
- * @param openEmailVerificationTab Callback invoked when verification is required.
- * @returns Sign-up form component.
+ * User registration form tab component collecting profile and credential details.
+ * Executes as a Client Component ("use client") utilizing React Hook Form, Zod schema validation,
+ * and the Better Auth sign-up client API.
+ *
+ * User Flows & Custom Schema:
+ * - Collects standard credentials (full name, email, password) alongside an extended custom
+ *   schema field (`favoriteNumber`) mapped into the user entity.
+ * - Dispatches registration via `authClient.signUp.email` with `ROUTES.HOME` as the post-verification target.
+ * - If the newly registered account requires email verification (`!res.data.user.emailVerified`),
+ *   automatically transitions the authentication portal view using `openEmailVerificationTab`.
+ *
+ * @param props - Component properties containing the callback to navigate to email verification
+ * @returns Client-rendered registration form with input fields, loading indicator, and validation messages
+ * @author Maruf Bepary
  */
 export function SignUpTab({
   openEmailVerificationTab,
@@ -42,8 +53,10 @@ export function SignUpTab({
   const { isSubmitting } = form.formState;
 
   /**
-   * Registers a user with email and password and prompts for verification if needed.
-   * @param data Form payload containing the new account information.
+   * Dispatches new user registration payload to Better Auth and routes to verification if required.
+   *
+   * @param data - Validated sign-up form fields including name, credentials, and custom profile attributes
+   * @author Maruf Bepary
    */
   async function handleSignUp(data: SignUpForm) {
     const res = await authClient.signUp.email(

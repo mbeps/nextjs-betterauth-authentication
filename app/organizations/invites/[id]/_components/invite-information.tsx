@@ -6,9 +6,15 @@ import { ROUTES } from "@/config/routes";
 import { authClient } from "@/lib/auth/auth-client";
 
 /**
- * Displays actions for accepting or rejecting an organization invitation.
- * @param invitation Invitation metadata fetched from Better Auth.
- * @returns Action buttons that drive the invitation response.
+ * Interactive actions component allowing users to accept or decline an organization invitation.
+ * Provides dual action buttons wired to Better Auth mutation methods. Upon acceptance,
+ * the member is joined to the organization, the organization is immediately set as active,
+ * and the user is redirected to the organizations dashboard. Upon rejection, the invite token is
+ * invalidated and the user is redirected to the home page.
+ *
+ * @param props - Component props containing the invitation ID and organization ID
+ * @returns Button controls for accepting or rejecting the invite
+ * @author Maruf Bepary
  */
 export function InviteInformation({
   invitation,
@@ -18,8 +24,12 @@ export function InviteInformation({
   const router = useRouter();
 
   /**
-   * Accepts the invitation and activates the organization context.
-   * @returns Promise describing the accept mutation.
+   * Accepts the organization invitation and sets the newly joined organization as active.
+   * Invokes Better Auth's `organization.acceptInvitation` mutation. On success, persists
+   * active workspace selection and navigates to the organizations dashboard.
+   *
+   * @returns Promise for the acceptance mutation
+   * @author Maruf Bepary
    */
   function acceptInvite() {
     return authClient.organization.acceptInvitation(
@@ -35,8 +45,11 @@ export function InviteInformation({
     );
   }
   /**
-   * Rejects the pending invitation and redirects home.
-   * @returns Promise describing the reject mutation.
+   * Rejects the pending organization invitation and redirects to the home page.
+   * Invokes Better Auth's `organization.rejectInvitation` mutation, invalidating the invite.
+   *
+   * @returns Promise for the rejection mutation
+   * @author Maruf Bepary
    */
   function rejectInvite() {
     return authClient.organization.rejectInvitation(

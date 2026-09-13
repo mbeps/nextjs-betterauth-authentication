@@ -23,8 +23,19 @@ import {
 } from "@/schemas/two-factor/backup-code.schema";
 
 /**
- * Backup code verification tab for two-factor authentication.
- * @returns Backup code verification form component.
+ * Client form component for completing a two-factor challenge using a single-use emergency backup code.
+ * Executes as a Client Component ("use client") utilizing React Hook Form, Zod schema validation,
+ * and the Better Auth two-factor backup code client API.
+ *
+ * Security Context & Flow:
+ * - Serves as a fallback recovery path for users locked out of their primary authenticator device.
+ * - Validates input against `backupCodeSchema` to ensure proper code formatting before submission.
+ * - Invokes `authClient.twoFactor.verifyBackupCode` against the Better Auth verification endpoint.
+ * - On successful validation, the backend invalidates the consumed backup code, grants full session
+ *   authorization, and the client navigates to `ROUTES.HOME`.
+ *
+ * @returns Client-rendered emergency backup code verification form with input field and submit button
+ * @author Maruf Bepary
  */
 export function BackupCodeTab() {
   const router = useRouter();
@@ -38,8 +49,10 @@ export function BackupCodeTab() {
   const { isSubmitting } = form.formState;
 
   /**
-   * Validates a backup code and redirects to the home page on success.
-   * @param data Form payload containing the backup code.
+   * Submits a single-use emergency backup recovery code to Better Auth and navigates upon success.
+   *
+   * @param data - Validated form payload containing the backup code
+   * @author Maruf Bepary
    */
   async function handleBackupCodeVerification(data: BackupCodeForm) {
     await authClient.twoFactor.verifyBackupCode(data, {

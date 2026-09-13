@@ -6,12 +6,22 @@ import {
 } from "better-auth/plugins/admin/access";
 
 /**
- * Access control instance shared across admin-aware plugins.
+ * Access control manager configured with default admin permission statements.
+ * Serves as the central authorization schema provider for defining roles and validating
+ * administrative permissions across server and client Better Auth plugins.
+ *
+ * @see {@link https://docs.better-auth.com/plugins/admin#access-control}
+ * @author Maruf Bepary
  */
 export const ac = createAccessControl(defaultStatements);
 
 /**
- * Default user role extended with the ability to list users.
+ * Customised standard user role definition.
+ * Inherits base user access statements while extending permissions to allow listing user records
+ * for directory browsing and invitation lookups.
+ *
+ * @see ac
+ * @author Maruf Bepary
  */
 export const user = ac.newRole({
   ...userAc.statements,
@@ -19,6 +29,11 @@ export const user = ac.newRole({
 });
 
 /**
- * Admin role with full CRUD permissions inherited from Better Auth.
+ * Comprehensive administrator role definition.
+ * Grants elevated privileges based on default Better Auth admin statements, including user management,
+ * role assignment, session revocation, and impersonation.
+ *
+ * @see ac
+ * @author Maruf Bepary
  */
 export const admin = ac.newRole(adminAc.statements);

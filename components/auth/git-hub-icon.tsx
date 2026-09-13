@@ -1,9 +1,14 @@
 import type { ComponentProps } from "react";
 
 /**
- * GitHub logo rendered with the shared icon sizing.
- * @param props SVG props forwarded to the element.
- * @returns GitHub brand icon.
+ * GitHub brand logo SVG icon component for OAuth buttons and social authentication flows.
+ * Renders an inline SVG vector of the GitHub Octocat mark configured with default compact dimensions (`size-4`)
+ * and `fill="currentColor"` so it automatically inherits text colors across light and dark themes.
+ * Accessibility attributes such as `aria-label` or `aria-hidden` can be passed via forwarded SVG props.
+ *
+ * @param props - Standard SVG attributes forwarded to the underlying `<svg>` element
+ * @returns An SVG element displaying the GitHub logo
+ * @author Maruf Bepary
  */
 export function GitHubIcon(props: ComponentProps<"svg">) {
   return (

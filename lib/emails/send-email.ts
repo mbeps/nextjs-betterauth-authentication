@@ -3,12 +3,20 @@ import { postmarkClient } from "@/utils/postmark/client";
 
 /**
  * Sends a transactional email through the configured Postmark client.
- * @param to Recipient email address.
- * @param subject Message subject line.
- * @param html HTML content rendered in rich clients.
- * @param text Plain-text fallback content.
- * @returns Promise that resolves with Postmark's API response.
- * @see https://postmarkapp.com/developer
+ * Serves as the central email dispatch utility invoked across all authentication lifecycle events,
+ * including email verification, password reset, account deletion, and team invites.
+ * Automatically injects the verified application sender address configured in environment variables.
+ *
+ * @param options - Email dispatch configuration options
+ * @param options.to - Recipient email address
+ * @param options.subject - Subject line of the email message
+ * @param options.html - Rich HTML message body rendered in modern mail clients
+ * @param options.text - Plain-text fallback message body for text-only clients
+ * @returns Promise resolving to Postmark's delivery response object
+ * @throws {Error} When the Postmark API request fails or network connectivity is lost
+ * @see {@link https://postmarkapp.com/developer}
+ * @see postmarkClient for client initialization
+ * @author Maruf Bepary
  */
 export function sendEmail({
   to,
