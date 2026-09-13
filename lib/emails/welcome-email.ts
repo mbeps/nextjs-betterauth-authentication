@@ -1,4 +1,4 @@
-import { sendEmail } from "./send-email";
+import { sendEmail } from "@/lib/emails/send-email";
 
 /**
  * Greets newly registered users after successful sign-up.

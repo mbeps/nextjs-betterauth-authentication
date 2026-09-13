@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
+import { SessionManagement } from "@/app/profile/_components/session/session-management";
 import { Card, CardContent } from "@/components/ui/card";
 import { auth } from "@/lib/auth/auth";
-import { SessionManagement } from "./session-management";
 
 /**
  * Server component that fetches sessions and renders revocation controls.

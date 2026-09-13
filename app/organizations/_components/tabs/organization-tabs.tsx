@@ -1,10 +1,10 @@
 "use client";
 
+import { InvitesTab } from "@/app/organizations/_components/tabs/invites-tab";
+import { MembersTab } from "@/app/organizations/_components/tabs/members-tab";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { authClient } from "@/lib/auth/auth-client";
-import { InvitesTab } from "./invites-tab";
-import { MembersTab } from "./members-tab";
 
 const TAB_VALUES = {
   MEMBERS: "members",

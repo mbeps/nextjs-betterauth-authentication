@@ -1,12 +1,12 @@
 "use client";
 
-import { BetterAuthActionButton } from "@/components/auth/buttons/better-auth-action-button";
+import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
+import { ROUTES } from "@/config/routes";
 import { authClient } from "@/lib/auth/auth-client";
 import {
   SUPPORTED_OAUTH_PROVIDER_DETAILS,
   SUPPORTED_OAUTH_PROVIDERS,
 } from "@/lib/auth/o-auth-providers";
-import { ROUTES } from "@/lib/routes";
 
 /**
  * Renders buttons for each configured OAuth provider.

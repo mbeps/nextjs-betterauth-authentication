@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/node-postgres";
-import { env } from "@/lib/env";
-import * as schema from "./schema";
+import { env } from "@/config/env";
+import * as schema from "@/drizzle/schema";
 
 /**
  * Drizzle ORM database client configured with the Better Auth schema.

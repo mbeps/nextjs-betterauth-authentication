@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/vitest";
 import { vi } from "vitest";
-import "./lib/test-setup.ts";
+import "@/__tests__/helpers/testSetup";
 
 // Stub ResizeObserver for cmdk, Base UI, Radix modals/popovers
 global.ResizeObserver = class ResizeObserver {

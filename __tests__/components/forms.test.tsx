@@ -55,7 +55,7 @@ vi.mock("@/lib/auth/auth-client", () => ({
 import { ForgotPassword } from "@/app/auth/login/_components/forms/forgot-password";
 import { InviteInformation } from "@/app/organizations/invites/[id]/_components/invite-information";
 import { ProfileUpdateForm } from "@/app/profile/_components/profile/profile-update-form";
-import { ROUTES } from "@/lib/routes";
+import { ROUTES } from "@/config/routes";
 
 describe("Forms & Action Components", () => {
   beforeEach(() => {

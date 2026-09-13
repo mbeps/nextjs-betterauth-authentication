@@ -3,17 +3,17 @@ import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { AccountDeletion } from "@/app/profile/_components/account/account-deletion";
+import { LinkedAccountsTab } from "@/app/profile/_components/account/linked-accounts-tab";
+import { ProfileUpdateForm } from "@/app/profile/_components/profile/profile-update-form";
+import { SecurityTab } from "@/app/profile/_components/security/security-tab";
+import { SessionsTab } from "@/app/profile/_components/session/sessions-tab";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LoadingSuspense } from "@/components/ui/loading-suspense";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ROUTES } from "@/config/routes";
 import { auth } from "@/lib/auth/auth";
-import { ROUTES } from "@/lib/routes";
-import { AccountDeletion } from "./_components/account/account-deletion";
-import { LinkedAccountsTab } from "./_components/account/linked-accounts-tab";
-import { ProfileUpdateForm } from "./_components/profile/profile-update-form";
-import { SecurityTab } from "./_components/security/security-tab";
-import { SessionsTab } from "./_components/session/sessions-tab";
-import { LoadingSuspense } from "./_components/shared/loading-suspense";
 
 const TAB_VALUES = {
   PROFILE: "profile",

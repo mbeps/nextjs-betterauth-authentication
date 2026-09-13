@@ -16,12 +16,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { NumberInput } from "@/components/ui/number-input";
+import { ROUTES } from "@/config/routes";
 import { authClient } from "@/lib/auth/auth-client";
-import { ROUTES } from "@/lib/routes";
 import {
   type ProfileUpdateFormData,
   profileUpdateSchema,
-} from "@/schemas/profile-update";
+} from "@/schemas/profile/profile-update.schema";
 
 type UpdateUserPayload = Parameters<typeof authClient.updateUser>[0];
 

@@ -1,6 +1,6 @@
-import { env } from "@/lib/env";
-import { ROUTES } from "../routes";
-import { sendEmail } from "./send-email";
+import { env } from "@/config/env";
+import { ROUTES } from "@/config/routes";
+import { sendEmail } from "@/lib/emails/send-email";
 
 /**
  * Notifies a user that they have been invited to join an organization.

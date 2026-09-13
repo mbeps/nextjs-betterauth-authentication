@@ -1,5 +1,6 @@
 import type { ComponentProps, ElementType } from "react";
-import { DiscordIcon, GitHubIcon } from "@/components/auth/icons/o-auth-icons";
+import { DiscordIcon } from "@/components/auth/discord-icon";
+import { GitHubIcon } from "@/components/auth/git-hub-icon";
 
 /**
  * OAuth providers enabled in the demo experience.

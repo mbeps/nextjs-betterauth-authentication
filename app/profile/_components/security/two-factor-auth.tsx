@@ -19,12 +19,11 @@ import { Input } from "@/components/ui/input";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
 import { authClient } from "@/lib/auth/auth-client";
+import { type QrForm, qrSchema } from "@/schemas/two-factor/qr.schema";
 import {
-  type QrForm,
-  qrSchema,
   type TwoFactorAuthForm,
   twoFactorAuthSchema,
-} from "@/schemas/two-factor-auth";
+} from "@/schemas/two-factor/two-factor-auth.schema";
 
 type TwoFactorData = {
   totpURI: string;

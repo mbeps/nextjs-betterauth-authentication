@@ -14,12 +14,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LoadingSwap } from "@/components/ui/loading-swap";
+import { ROUTES } from "@/config/routes";
 import { authClient } from "@/lib/auth/auth-client";
-import { ROUTES } from "@/lib/routes";
 import {
   type ForgotPasswordForm,
   forgotPasswordSchema,
-} from "@/schemas/forgot-password";
+} from "@/schemas/auth/forgot-password.schema";
 
 /**
  * Form that requests a password reset email for the provided address.

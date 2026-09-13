@@ -7,16 +7,40 @@ import { admin as adminPlugin } from "better-auth/plugins/admin";
 import { organization } from "better-auth/plugins/organization";
 import { twoFactor } from "better-auth/plugins/two-factor";
 import { desc, eq } from "drizzle-orm";
-import { ac, admin, user } from "@/components/auth/utils/permissions";
+import { env } from "@/config/env";
 import { db } from "@/drizzle/db";
 import { member } from "@/drizzle/schema";
-import { env } from "@/lib/env";
-import { sendDeleteAccountVerificationEmail } from "../emails/delete-account-verification";
-import { sendEmailVerificationEmail } from "../emails/email-verification";
-import { sendOrganizationInviteEmail } from "../emails/organization-invite-email";
-import { sendPasswordResetEmail } from "../emails/password-reset-email";
-import { sendWelcomeEmail } from "../emails/welcome-email";
-import { GLOBAL_ROLES } from "./roles";
+import { ac, admin, user } from "@/lib/auth/permissions";
+import { GLOBAL_ROLES } from "@/lib/auth/roles";
+import { sendDeleteAccountVerificationEmail } from "@/lib/emails/delete-account-verification";
+import { sendEmailVerificationEmail } from "@/lib/emails/email-verification";
+import { sendOrganizationInviteEmail } from "@/lib/emails/organization-invite-email";
+import { sendPasswordResetEmail } from "@/lib/emails/password-reset-email";
+import { sendWelcomeEmail } from "@/lib/emails/welcome-email";
+
+type EmailUser = { name: string; email: string };
+
+type ChangeEmailPayload = {
+  user: EmailUser;
+  url: string;
+  newEmail: string;
+};
+
+type UserEmailPayload = {
+  user: EmailUser;
+  url: string;
+};
+
+type OrganizationInvitePayload = {
+  email: string;
+  organization: { name: string };
+  inviter: { user: { name: string } };
+  invitation: { id: string };
+};
+
+type SessionCreatePayload = {
+  userId: string;
+} & Record<string, unknown>;
 
 /**
  * Better Auth server configured with email, OAuth, passkey, and organization features.
@@ -30,7 +54,11 @@ export const auth = betterAuth({
   user: {
     changeEmail: {
       enabled: true,
-      sendChangeEmailConfirmation: async ({ user, url, newEmail }: any) => {
+      sendChangeEmailConfirmation: async ({
+        user,
+        url,
+        newEmail,
+      }: ChangeEmailPayload) => {
         await sendEmailVerificationEmail({
           user: { ...user, email: newEmail },
           url,
@@ -39,7 +67,10 @@ export const auth = betterAuth({
     },
     deleteUser: {
       enabled: true,
-      sendDeleteAccountVerification: async ({ user, url }: any) => {
+      sendDeleteAccountVerification: async ({
+        user,
+        url,
+      }: UserEmailPayload) => {
         await sendDeleteAccountVerificationEmail({ user, url });
       },
     },
@@ -53,14 +84,14 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
-    sendResetPassword: async ({ user, url }: any) => {
+    sendResetPassword: async ({ user, url }: UserEmailPayload) => {
       await sendPasswordResetEmail({ user, url });
     },
   },
   emailVerification: {
     autoSignInAfterVerification: true,
     sendOnSignUp: true,
-    sendVerificationEmail: async ({ user, url }: any) => {
+    sendVerificationEmail: async ({ user, url }: UserEmailPayload) => {
       await sendEmailVerificationEmail({ user, url });
     },
   },
@@ -113,7 +144,7 @@ export const auth = betterAuth({
         organization,
         inviter,
         invitation,
-      }: any) => {
+      }: OrganizationInvitePayload) => {
         await sendOrganizationInviteEmail({
           invitation,
           inviter: inviter.user,
@@ -143,7 +174,7 @@ export const auth = betterAuth({
   databaseHooks: {
     session: {
       create: {
-        before: async (userSession: any) => {
+        before: async (userSession: SessionCreatePayload) => {
           const membership = await db.query.member.findFirst({
             where: eq(member.userId, userSession.userId),
             orderBy: desc(member.createdAt),

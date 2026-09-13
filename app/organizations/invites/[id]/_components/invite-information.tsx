@@ -1,9 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { BetterAuthActionButton } from "@/components/auth/buttons/better-auth-action-button";
+import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
+import { ROUTES } from "@/config/routes";
 import { authClient } from "@/lib/auth/auth-client";
-import { ROUTES } from "@/lib/routes";
 
 /**
  * Displays actions for accepting or rejecting an organization invitation.

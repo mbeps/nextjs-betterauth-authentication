@@ -19,7 +19,7 @@ import { authClient } from "@/lib/auth/auth-client";
 import {
   type ChangePasswordFormData,
   changePasswordSchema,
-} from "@/schemas/change-password";
+} from "@/schemas/auth/change-password.schema";
 
 /**
  * Form that lets users update credentials and optionally revoke other sessions.

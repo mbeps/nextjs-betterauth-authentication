@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { BetterAuthActionButton } from "@/components/auth/buttons/better-auth-action-button";
+import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
 import { Button } from "@/components/ui/button";
+import { ROUTES } from "@/config/routes";
 import { authClient } from "@/lib/auth/auth-client";
-import { ROUTES } from "@/lib/routes";
 
 /**
  * Landing page that surfaces navigation options based on session state.

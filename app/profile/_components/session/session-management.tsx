@@ -4,7 +4,7 @@ import type { Session } from "better-auth";
 import { Monitor, Smartphone, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { UAParser } from "ua-parser-js";
-import { BetterAuthActionButton } from "@/components/auth/buttons/better-auth-action-button";
+import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { authClient } from "@/lib/auth/auth-client";

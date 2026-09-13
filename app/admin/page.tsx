@@ -3,6 +3,7 @@ import { ArrowLeft, Users } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { UserRow } from "@/app/admin/_components/user-row";
 import {
   Card,
   CardContent,
@@ -17,9 +18,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ROUTES } from "@/config/routes";
 import { auth } from "@/lib/auth/auth";
-import { ROUTES } from "@/lib/routes";
-import { UserRow } from "./_components/user-row";
 
 /**
  * Server-rendered admin dashboard listing users and management actions.

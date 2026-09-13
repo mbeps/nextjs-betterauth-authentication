@@ -16,9 +16,9 @@ import { Input } from "@/components/ui/input";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { NumberInput } from "@/components/ui/number-input";
 import { PasswordInput } from "@/components/ui/password-input";
+import { ROUTES } from "@/config/routes";
 import { authClient } from "@/lib/auth/auth-client";
-import { ROUTES } from "@/lib/routes";
-import { type SignUpForm, signUpSchema } from "@/schemas/sign-up";
+import { type SignUpForm, signUpSchema } from "@/schemas/auth/sign-up.schema";
 
 /**
  * Sign-up form that captures user info and triggers Better Auth registration.
