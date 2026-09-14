@@ -20,6 +20,9 @@ import {
 } from "@/components/ui/table";
 import { ROUTES } from "@/config/routes";
 import { auth } from "@/lib/auth/auth";
+import { getLogger } from "@/lib/logger";
+
+const log = getLogger(["app", "admin"]);
 
 /**
  * Server-rendered administration console page for managing registered users, roles, and privileges.
@@ -47,13 +50,22 @@ export default async function AdminPage() {
     ReturnType<typeof admin>["endpoints"];
 
   // Ensure only admins with list permission can view the dashboard.
-  if (session == null) return redirect(ROUTES.AUTH.LOGIN);
+  if (session == null) {
+    log.warn("Unauthorized access attempt to admin dashboard");
+    return redirect(ROUTES.AUTH.LOGIN);
+  }
   const hasAccess = await adminApi.userHasPermission({
     headers: await headers(),
     body: { permissions: { user: ["list"] } },
   });
-  if (!hasAccess.success) return redirect(ROUTES.HOME);
+  if (!hasAccess.success) {
+    log.warn("Forbidden access attempt to admin dashboard (userId: {userId})", {
+      userId: session.user.id,
+    });
+    return redirect(ROUTES.HOME);
+  }
 
+  log.debug("Fetching user list for admin dashboard");
   const users = await adminApi.listUsers({
     headers: await headers(),
     query: { limit: 100, sortBy: "createdAt", sortDirection: "desc" },

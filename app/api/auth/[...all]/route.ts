@@ -1,5 +1,8 @@
 import { toNextJsHandler } from "better-auth/next-js";
 import { auth } from "@/lib/auth/auth";
+import { getLogger } from "@/lib/logger";
+
+const log = getLogger(["app", "api", "auth"]);
 
 /**
  * Next.js App Router route handler adapter generated from the Better Auth server configuration.
@@ -15,7 +18,11 @@ const authHandlers = toNextJsHandler(auth);
  *
  * @author Maruf Bepary
  */
-export const GET: typeof authHandlers.GET = authHandlers.GET;
+export const GET: typeof authHandlers.GET = async (request) => {
+  const path = new URL(request.url).pathname;
+  log.debug("Incoming Auth GET request: {path}", { path });
+  return authHandlers.GET(request);
+};
 
 /**
  * Universal HTTP POST route handler proxying mutation requests to the Better Auth engine.
@@ -24,4 +31,8 @@ export const GET: typeof authHandlers.GET = authHandlers.GET;
  *
  * @author Maruf Bepary
  */
-export const POST: typeof authHandlers.POST = authHandlers.POST;
+export const POST: typeof authHandlers.POST = async (request) => {
+  const path = new URL(request.url).pathname;
+  log.debug("Incoming Auth POST request: {path}", { path });
+  return authHandlers.POST(request);
+};

@@ -21,12 +21,28 @@ describe("validateEnv", () => {
     expect(parsed.DATABASE_URL).toBe(validServerEnv.DATABASE_URL);
     expect(parsed.POSTMARK_FROM_EMAIL).toBe(validServerEnv.POSTMARK_FROM_EMAIL);
     expect(parsed.NODE_ENV).toBe("test");
+    expect(parsed.LOG_LEVEL).toBe("info");
   });
 
   it("defaults NODE_ENV to development if not provided", () => {
     const { NODE_ENV: _, ...withoutNodeEnv } = validServerEnv;
     const parsed = validateEnv(withoutNodeEnv, true);
     expect(parsed.NODE_ENV).toBe("development");
+  });
+
+  it("handles LOG_LEVEL customization and transforms warn to warning", () => {
+    const parsedWarn = validateEnv({ ...validServerEnv, LOG_LEVEL: "warn" }, true);
+    expect(parsedWarn.LOG_LEVEL).toBe("warning");
+
+    const parsedDebug = validateEnv({ ...validServerEnv, LOG_LEVEL: "debug" }, true);
+    expect(parsedDebug.LOG_LEVEL).toBe("debug");
+  });
+
+  it("throws when LOG_LEVEL is invalid", () => {
+    const invalidEnv = { ...validServerEnv, LOG_LEVEL: "invalid_level" };
+    expect(() => validateEnv(invalidEnv, true)).toThrow(
+      /Invalid environment variables/,
+    );
   });
 
   it("throws when a required server environment variable is missing", () => {

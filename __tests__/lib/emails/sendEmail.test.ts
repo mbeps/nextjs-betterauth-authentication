@@ -48,6 +48,19 @@ describe("Transactional Emails", () => {
         TextBody: "Hello",
       });
     });
+
+    it("throws error when Postmark client encounters failure", async () => {
+      mockSendEmail.mockRejectedValueOnce(new Error("Postmark API failure"));
+
+      await expect(
+        sendEmail({
+          to: "user@example.com",
+          subject: "Failing Email",
+          html: "<p>Fail</p>",
+          text: "Fail",
+        }),
+      ).rejects.toThrow("Postmark API failure");
+    });
   });
 
   describe("sendWelcomeEmail", () => {
