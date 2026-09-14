@@ -7,6 +7,9 @@ import { OrganizationSelect } from "@/app/organizations/_components/select/organ
 import { OrganizationTabs } from "@/app/organizations/_components/tabs/organization-tabs";
 import { ROUTES } from "@/config/routes";
 import { auth } from "@/lib/auth/auth";
+import { getLogger } from "@/lib/logger";
+
+const log = getLogger(["app", "organizations"]);
 
 /**
  * Server-rendered dashboard page for managing organizations and team memberships.
@@ -20,7 +23,14 @@ import { auth } from "@/lib/auth/auth";
 export default async function OrganizationsPage() {
   const session = await auth.api.getSession({ headers: await headers() });
   // Require authentication before accessing organization resources.
-  if (session == null) return redirect(ROUTES.AUTH.LOGIN);
+  if (session == null) {
+    log.warn("Unauthorized access attempt to organizations dashboard");
+    return redirect(ROUTES.AUTH.LOGIN);
+  }
+
+  log.debug("Rendering organizations dashboard (userId: {userId})", {
+    userId: session.user.id,
+  });
 
   return (
     <div className="container mx-auto my-6 px-4">

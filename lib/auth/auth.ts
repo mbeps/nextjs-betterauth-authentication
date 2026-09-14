@@ -17,6 +17,9 @@ import { sendEmailVerificationEmail } from "@/lib/emails/email-verification";
 import { sendOrganizationInviteEmail } from "@/lib/emails/organization-invite-email";
 import { sendPasswordResetEmail } from "@/lib/emails/password-reset-email";
 import { sendWelcomeEmail } from "@/lib/emails/welcome-email";
+import { getLogger } from "@/lib/logger";
+
+const log = getLogger(["app", "auth"]);
 
 /**
  * Basic user profile payload required for sending email notifications.
@@ -104,6 +107,7 @@ export const auth = betterAuth({
         url,
         newEmail,
       }: ChangeEmailPayload) => {
+        log.info("Email change confirmation requested");
         await sendEmailVerificationEmail({
           user: { ...user, email: newEmail },
           url,
@@ -116,6 +120,7 @@ export const auth = betterAuth({
         user,
         url,
       }: UserEmailPayload) => {
+        log.info("Account deletion verification requested");
         await sendDeleteAccountVerificationEmail({ user, url });
       },
     },
@@ -130,6 +135,7 @@ export const auth = betterAuth({
     enabled: true,
     requireEmailVerification: true,
     sendResetPassword: async ({ user, url }: UserEmailPayload) => {
+      log.info("Password reset email requested");
       await sendPasswordResetEmail({ user, url });
     },
   },
@@ -137,6 +143,7 @@ export const auth = betterAuth({
     autoSignInAfterVerification: true,
     sendOnSignUp: true,
     sendVerificationEmail: async ({ user, url }: UserEmailPayload) => {
+      log.info("Verification email requested");
       await sendEmailVerificationEmail({ user, url });
     },
   },
@@ -190,6 +197,9 @@ export const auth = betterAuth({
         inviter,
         invitation,
       }: OrganizationInvitePayload) => {
+        log.info("Organization invitation email requested (org: {orgName})", {
+          orgName: organization.name,
+        });
         await sendOrganizationInviteEmail({
           invitation,
           inviter: inviter.user,
@@ -211,6 +221,7 @@ export const auth = betterAuth({
         };
 
         if (user != null) {
+          log.info("New user registered successfully");
           await sendWelcomeEmail(user);
         }
       }
@@ -220,6 +231,10 @@ export const auth = betterAuth({
     session: {
       create: {
         before: async (userSession: SessionCreatePayload) => {
+          log.debug(
+            "Resolving active organization for user session (userId: {userId})",
+            { userId: userSession.userId },
+          );
           const membership = await db.query.member.findFirst({
             where: eq(member.userId, userSession.userId),
             orderBy: desc(member.createdAt),

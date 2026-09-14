@@ -1,5 +1,8 @@
 import { env } from "@/config/env";
+import { getLogger } from "@/lib/logger";
 import { postmarkClient } from "@/utils/postmark/client";
+
+const log = getLogger(["app", "emails"]);
 
 /**
  * Sends a transactional email through the configured Postmark client.
@@ -18,7 +21,7 @@ import { postmarkClient } from "@/utils/postmark/client";
  * @see postmarkClient for client initialization
  * @author Maruf Bepary
  */
-export function sendEmail({
+export async function sendEmail({
   to,
   subject,
   html,
@@ -29,11 +32,23 @@ export function sendEmail({
   html: string;
   text: string;
 }) {
-  return postmarkClient.sendEmail({
-    From: env.POSTMARK_FROM_EMAIL,
-    To: to,
-    Subject: subject,
-    HtmlBody: html,
-    TextBody: text,
-  });
+  log.debug("Dispatching transactional email: '{subject}'", { subject });
+
+  try {
+    const result = await postmarkClient.sendEmail({
+      From: env.POSTMARK_FROM_EMAIL,
+      To: to,
+      Subject: subject,
+      HtmlBody: html,
+      TextBody: text,
+    });
+    log.info("Transactional email sent successfully: '{subject}'", { subject });
+    return result;
+  } catch (error) {
+    log.error("Failed to send transactional email: '{subject}' - {error}", {
+      subject,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    throw error;
+  }
 }

@@ -11,6 +11,9 @@ import {
 } from "@/components/ui/card";
 import { ROUTES } from "@/config/routes";
 import { auth } from "@/lib/auth/auth";
+import { getLogger } from "@/lib/logger";
+
+const log = getLogger(["app", "organizations", "invites"]);
 
 /**
  * Route parameter contract for dynamic organization invitation URLs.
@@ -38,16 +41,30 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
   const organizationApi = auth.api as typeof auth.api &
     ReturnType<typeof organization>["endpoints"];
   // Force login before revealing invitation details.
-  if (session == null) return redirect(ROUTES.AUTH.LOGIN);
+  if (session == null) {
+    log.warn("Unauthorized access attempt to organization invite");
+    return redirect(ROUTES.AUTH.LOGIN);
+  }
 
   const { id } = await params;
+  log.debug("Fetching invitation details (inviteId: {inviteId})", {
+    inviteId: id,
+  });
 
   const invitation = await organizationApi
     .getInvitation({
       headers: await headers(),
       query: { id },
     })
-    .catch(() => redirect(ROUTES.HOME));
+    .catch(() => {
+      log.warn(
+        "Invalid or expired invitation accessed (inviteId: {inviteId})",
+        {
+          inviteId: id,
+        },
+      );
+      return redirect(ROUTES.HOME);
+    });
 
   return (
     <div className="container mx-auto my-6 max-w-2xl px-4">

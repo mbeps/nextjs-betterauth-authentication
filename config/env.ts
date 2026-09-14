@@ -24,6 +24,10 @@ export const serverEnvSchema = clientEnvSchema.extend({
   NODE_ENV: z
     .enum(["development", "test", "production"])
     .default("development"),
+  LOG_LEVEL: z
+    .enum(["debug", "info", "warn", "warning", "error", "fatal"])
+    .default("info")
+    .transform((val) => (val === "warn" ? "warning" : val)),
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
   BETTER_AUTH_SECRET: z.string().min(1, "BETTER_AUTH_SECRET is required"),
   BETTER_AUTH_URL: z.string().url("BETTER_AUTH_URL must be a valid URL"),
@@ -79,6 +83,7 @@ export type Env = ServerEnv;
 export function validateEnv(
   runtimeEnv: Record<string, unknown> = {
     NODE_ENV: process.env.NODE_ENV,
+    LOG_LEVEL: process.env.LOG_LEVEL,
     DATABASE_URL: process.env.DATABASE_URL,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
